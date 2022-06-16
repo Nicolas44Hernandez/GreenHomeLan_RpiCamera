@@ -1,0 +1,26 @@
+{
+  "name": "RPI_box",
+  "version": "1.0.0",
+  "description": "NodeJS configuration for RPI box",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clemanthkar/GreenHomeLan_Camera.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clemanthkar/GreenHomeLan_Camera/Server_Box/issues"
+  },
+  "homepage": "https://github.com/clemanthkar/GreenHomeLan_Camera/Server_Box#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "child_process": "^1.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "onoff": "^6.0.3"
+  }
+}

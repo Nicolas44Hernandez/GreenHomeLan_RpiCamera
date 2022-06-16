@@ -162,27 +162,58 @@ Le point d'accès de la rpi_box sera maintenant visible par `rpibox` avec comme 
 
 ## **5. Installation du serveur Nodejs**
 
-Dans un premier temps, il faut récupérer le répertoire sur GitHub:
+Une fois connecté à la box RPI via SSH il ests necessaire d'installer installer NodeJS.
 
-`git clone git@github.com:clemanthkar/GreenHomeLan_Camera.git`
+Télécharger NodeJS
+```bash
+sudo su
+curl -fsSL https://deb.nodesource.com/setup_17.x | bash -
+``` 
 
-Aller dans le répertoire GreenHomeLan/Server_Box qui correspond à notre environnement de travail pour le rpi_box. Installer les dépendances suivantes:
+Installer NodeJS
+```bash
+sudo apt install nodejs
+``` 
 
-`npm init` (valider chaque lignes)
+Verifier l'installation 
+``` bash
+$ node --version
+v17.9.0
+$ npm --version
+8.5.5
+``` 
 
- Puis installation des toutes les dépendances : 
+Installer et configurer git
 
-`npm i express`
+``` bash
+sudo apt install git
+git config --global user.name <your user name>
+git config --global user.email <your email>
+``` 
 
-`npm i axios`
+Créer un clé SSH et l'ajouter au compte github
 
-`npm i cors`
+[Procédure détaillée](https://docs.github.com/es/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
-`npm i child_process`
 
-`npm i onoff`
+Récupérer le répertoire sur GitHub:
 
-`npm i util`
+```bash
+git clone git@github.com:clemanthkar/GreenHomeLan_Camera.git
+```
+
+TODO: Delete this after merge
+Checkout branch
+```bash
+git checkout feature/npm_dependencies_in_package_file
+```
+
+Aller dans le répertoire GreenHomeLan/Server_Box qui correspond à notre environnement de travail pour le rpi_box. Installer les dépendances:
+
+```bash
+cd GreenHomeLan_Camera/Server_Box
+npm install
+```
 
 Avant de lancer le server il faut renseigner une information contenue dans le fichier config.js
 
