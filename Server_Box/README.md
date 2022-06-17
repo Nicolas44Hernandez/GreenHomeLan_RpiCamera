@@ -14,60 +14,126 @@ Connectez le rpi_box par par Ethernet et branchez y un clavier, et un écran via
 Pour accéder aux commandes du raspberrypi, nous avons laissé par défaut (dentifiant : pi et mot de passe : raspberry)
 
 
-Il est possible de changer le mot de passe (non expliqué dans ce document). Déterminez l'adresse IP du rpi_box par la commande
+Il est possible de changer le mot de passe (non expliqué dans ce document). Déterminez l'adresse IP de l'interface eth0 rpi_box par la commande
 
-`ifconfig`
+```bash
+ifconfig
+```
 
-Notez le. Ensuite, il est important d'activer l'option ssh (désactivé par défaut). Pour cela:
+l'addresse ip se trouve dans la premiere ligne du block eth0
+```bash
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.242.82.1  netmask 255.255.255.0  broadcast 10.242.82.255
+        inet6 fe80::db6f:275a:6832:41e2  prefixlen 64  scopeid 0x20<link>
+```
+Notez-la pour vous connecter en ssh a la RPI.
 
-`sudo raspi-config`
+désormais on appellera l'adresse IP de la box RPI sur son interface eth0 <RPI_BOX_IP_ETH0>
 
-Puis activer l'option ssh et  redémarrer par 
+Activer l'option ssh (désactivé par défaut) et configurer les options de localisation:
 
-` sudo reboot`
+```bash
+sudo raspi-config
+```
+
+* Activer l'option ssh (Interface Options)
+* Configurer la timezone (Localization Options -> Timezone)
+* Configurer WLAN country pour activer l'interface wlan0 (Localization Options -> WLAN Country)
+
+Redémarrer la RPI
+
+```bash
+sudo reboot now
+```
 
 Par la suite, l'écran et le clavier ne sont plus utiles. On peut se connecter par SSH via l'outil Putty en indiquant l'adresse ip préalabelement récupérée.
 
 Une fois connecté en  SSH, il est utile si cela est nécessaire, de changer le clavier en mode azerty, on peut le configurer de la manière suivante :
 
-`sudo nano /etc/default/keyboard`			
+```bash
+sudo nano /etc/default/keyboard
+```
 
 puis modifier la ligne XKBLAYOUT="gb" par XKBLAYOUT="fr"						
 
+Pour arrêter de recevoir des variables d'environnement du client SSH il faut modifier le fichier de configuration ssh: 
 
-## **3. Installation des packages**
+```bash
+sudo nano /etc/ssh/sshd_config
+``` 
+
+ Marquer la ligne `AcceptEnv LANG LC_* ` comme commentaire.
+
+ ## **3. Configuration de la RPI comme point d'access WiFi**
+
+ Cette procédure peut être effectuée de façon [automatique](#configuration-automatique) ou [manuellement](#configuration-manuelle). 
+
+ ## **Configuration Automatique**
+
+La configuration RPI automatique est fait via le script  
+`Server_Box/setup/scripts/rpi-server-box-setup.sh` 
+
+Il est necessaire d'ajouter les adresses IP du réseau à configurer dans le fichier de configuration `Server_Box/setup/scripts/rpi-server-box-setup.sh` 
+
+```
+RPI_SERVER_BOX_IP=192.168.4.1 -> Adresse IP de la interface wlan0 (WiFi) de la RPI box
+RPI_CAMERA_IP=192.168.4.12 -> Adresse IP de la camera
+RPI_CAMERA_PORT=4000 -> Port de la camera
+``` 
+
+Pour lancer le script de configuration automatique il est nécessaire de copier le répertoire setup via scp dans la RPI_Box, pour cela:
+```bash
+scp -r Server_Box/setup/ <PI_USER>@<RPI_BOX_IP_ETH0>:
+```
+
+Se connecter via SSH a la RPI_Box
+```bash
+ssh <PI_USER>@<RPI_BOX_IP_ETH0>
+```
+
+lancer le script depuis le répertoire `setup/scripts` 
+```bash
+cd setup/scripts
+chmod +x rpi-server-box-setup.sh
+sudo ./rpi-server-box-setup.sh
+```
+
+On peut valider le process apres le redemarage de la rpi_box
+Le point d'accès de la rpi_box sera maintenant visible par `rpibox` avec comme mot de passe `greenhomelan`
+## **Configuration Manuelle**
+
+### **Installation des packages**
 
 Nous allons ici installer les paquets issues de dépot linux :
 
-`sudo apt update`
+```bash
+sudo apt update
+sudo apt upgrade
+sudo apt install python3-pip (est ce nécessaire?)
+sudo apt install dnsmasq
+sudo apt install iptables
+```
 
-`sudo apt upgrade`
-
-`sudo apt install python3-pip` (est ce nécessaire?)
-
-`sudo apt install dnsmasq`
-
-`sudo apt install iptables`
-
-
-
-## **4. Configuration du rpi_box en tant que point d'accès Wi-Fi**
+## **Configuration du rpi_box en tant que point d'accès Wi-Fi**
 
 le rpi_box doit être configuré comme point d'accès Wi-Fi. Les commandes pour la configuration sont les suivantes :
 
-`sudo apt install hostapd`		
+```bash
+sudo apt install hostapd	
+sudo systemctl unmask hostapd
+sudo systemctl enable hostapd		
+``` 
 
-`sudo systemctl unmask hostapd`	
-
-`sudo systemctl enable hostapd	`	
-
-`sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent`	
-
-`sudo reboot`
+```bash
+sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent	
+sudo reboot
+```
 		
 Par la suite, le fichier dhcpcd.conf est configuré pour l'attribution d'une adresse statique
 
-`sudo nano /etc/dhcpcd.conf`
+```bash
+sudo nano /etc/dhcpcd.conf
+```
 
 Les 3 lignes de code ci-dessous doit être copier dans le fichier (ctr+x pour sortir du mode nano)
 
@@ -77,15 +143,11 @@ interface wlan0
     nohook wpa_supplicant
 ```
 
-Le rpi_box aura donc une adresse ip fixe wifi dont l'adresse est : 192.168.4.1 en plus de son adresse Ethernet. On peut le vérifier par la commande: 
-
-`sudo ifconfig`
-
-où etho et wlan0 on chacun une adresse ip attribué avec wlan0 valant 192.168.4.1
-
 Ensuite, il faut activer le routage	en éditant un nouveau fichier : 
 
-`sudo nano /etc/sysctl.d/routed-ap.conf`
+```bash
+sudo nano /etc/sysctl.d/routed-ap.conf
+```
 
 en copiant/collant cette ligne
 
@@ -95,23 +157,33 @@ net.ipv4.ip_forward=1
 
 Les 2 commandes suivent la manière dont le routage du traffic HTTP doit être réaliser par le rpi-box en le redirigeant vers vers le rapsberry pi de la camera dont l'adresse est 192.168.4.12 et sur le port 4000. Cette indication est à modifier si l'adresse IP du raspberry camera est différente.
 
-`sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 4000 -m conntrack --ctstate NEW -j DNAT --to 192.168.4.12:4000`
 
-`sudo iptables -t nat -A PREROUTING -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT`
+```bash
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 4000 -m conntrack --ctstate NEW -j DNAT --to 192.168.4.12:4000
+```
+
+```bash
+sudo iptables -t nat -A PREROUTING -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+```
 
 Puis les 2 commandes suivantes servent à finaliser le routage
 
-`sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE`
+```bash
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+```
 
 Pour rendre les règles de routage persistente:
-
-`sudo netfilter-persistent save`	
+```bash
+sudo netfilter-persistent save
+```	
 
 
 Ensuite, on configure les services DHCP et DNS par les commandes suivantes :
 
-`sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig`
-`sudo nano /etc/dnsmasq.conf`
+```bash
+sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+sudo nano /etc/dnsmasq.conf
+```
 
 les 4 lignes ci-dessous sont à copier coller dans le fichier dnsmasq.conf en remplacement de l'existant. On indique ici, la plage des adresses IP de tout éléments venant se connecter sur le point d'acceès rpi_box avec une durée de 300 jours. 
 
@@ -124,7 +196,9 @@ address=/gw.wlan/192.168.4.1
 
 Pour finaliser la configuration du point d'accès, on configure les paramètres réseau en proposant un nom de réseau et un mot de passe		
 
-`sudo nano /etc/hostapd/hostapd.conf`
+```bash
+sudo nano /etc/hostapd/hostapd.conf
+```
 
 puis copier coller les lignes ci-dessous. 
 ```    
@@ -147,20 +221,31 @@ country_code=FR
 
 Puis on indique l'emplacement de la configuration
 
-`sudo nano /etc/default/hostapd`
+```bash
+sudo nano /etc/default/hostapd
+```
 
 ```
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 ```
 
+Le rpi_box aura donc une adresse ip fixe wifi dont l'adresse est : 192.168.4.1 en plus de son adresse Ethernet. On peut le vérifier par la commande: 
+
+```bash
+sudo ifconfig
+```
+où etho et wlan0 on chacun une adresse ip attribué avec wlan0 valant 192.168.4.1
+
 On valide le tout par le redémarrage du rpi-box
 
-`sudo reboot`
+```bash
+sudo reboot now
+```
 
 Le point d'accès de la rpi_box sera maintenant visible par `rpibox` avec comme mot de passe `greenhomelan` 
 (un autre mot de passe est possible du moment qu'il est renseigné dans le fichier hostapd.conf)
 
-## **5. Installation du serveur Nodejs**
+## **4. Installation du serveur Nodejs**
 
 Dans un premier temps, il faut récupérer le répertoire sur GitHub:
 
@@ -168,21 +253,22 @@ Dans un premier temps, il faut récupérer le répertoire sur GitHub:
 
 Aller dans le répertoire GreenHomeLan/Server_Box qui correspond à notre environnement de travail pour le rpi_box. Installer les dépendances suivantes:
 
-`npm init` (valider chaque lignes)
+```bash
+npm init (valider chaque lignes)
+```
+
+
 
  Puis installation des toutes les dépendances : 
 
-`npm i express`
-
-`npm i axios`
-
-`npm i cors`
-
-`npm i child_process`
-
-`npm i onoff`
-
-`npm i util`
+```bash
+npm i express
+npm i axios
+npm i cors
+npm i child_process
+npm i onoff
+npm i util
+```
 
 Avant de lancer le server il faut renseigner une information contenue dans le fichier config.js
 
@@ -194,10 +280,14 @@ MSERV_ADR : {
 ```
 L'obejt MSERV_ADR prend comme clé l'adresse mac du rpi-cloud et la valeur l'adresse IP du cloud. Cela signifie que le rpi-cloud doit être entièrement configuré er fonctionnel pour récuéprer ces informations par l'intermédiaire de la commande suivante : 
 
-`sudo arp -a`
+```bash
+sudo arp -a
+```
 
 Le serveur est ensuite prêt à être lancé : 
 
-`node server_box.js`
+```bash
+node server_box.js
+```
 
 A noter qu'il faut lancer le server_box.js au préalable et qu'il faut faire un ping sur le cloud pour favoriser la découverte qui n'est pour l'instant pas systématique.
