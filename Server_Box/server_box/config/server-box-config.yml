@@ -1,0 +1,18 @@
+API_TITLE: ORCHESTRATOR API
+API_VERSION: v1
+
+# openapi.json version and URL prefix
+OPENAPI_VERSION: 3.0.3
+OPENAPI_URL_PREFIX: /
+
+# Enable swagger UI
+OPENAPI_SWAGGER_UI_PATH: /docs
+OPENAPI_SWAGGER_UI_URL: https://cdn.jsdelivr.net/npm/swagger-ui-dist/
+
+# Telnet connection configuration 
+#LIVEBOX_IP_ADDRESS: 192.168.4.12 # RPI
+LIVEBOX_IP_ADDRESS: localhost # LOCAL
+LIVEBOX_TELNET_PORT: 23
+LIVEBOX_LOGIN: nicolas
+LIVEBOX_PASSWORD: Nico44
+LIVEBOX_TELNET_COMMANDS: server_box/config/telnet_commands.yml

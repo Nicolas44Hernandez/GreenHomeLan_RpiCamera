@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "server-box"
+version = "1.0.0"
+description = ""
+authors = ["Nicolas HERNANDEZ <nicolas.hernandezpaez@orange.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "^2.0.1"
+flask-smorest = "^0.34.0"
+PyYAML = "^5.4.1"
+

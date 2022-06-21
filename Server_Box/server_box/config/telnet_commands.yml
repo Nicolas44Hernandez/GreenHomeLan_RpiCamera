@@ -1,0 +1,24 @@
+SYSTEM:
+    python version: sudo python --version
+    poetry version: poetry --version
+    node version: node --version
+    npm version: npm --version
+
+WIFI:
+    status: echo NOT IMPLEMENTED wifi[status]
+    ON: echo NOT IMPLEMENTED WIFI[ON]
+    OFF: sudo reboot now
+    bands:
+        2.4GHz: 
+            status: echo  NOT IMPLEMENTED wifi[bands][2.4GHz][status]
+            ON: echo NOT IMPLEMENTED wifi[bands][2.4GHz][ON]
+            OFF: echo NOT IMPLEMENTED wifi[bands][2.4GHz][OFF]
+        5GHz: 
+            status: echo NOT IMPLEMENTED wifi[bands][5GHz][status]
+            ON: echo NOT IMPLEMENTED wifi[bands][5GHz][ON]
+            OFF: echo NOT IMPLEMENTED wifi[bands][5GHz][OFF]           
+        6GHz: 
+            status: echo NOT IMPLEMENTED wifi[bands][6GHz][status]
+            ON: echo NOT IMPLEMENTED wifi[bands][6GHz][ON]
+            OFF: echo NOT IMPLEMENTED wifi[bands][6GHz][OFF]                
+                  
