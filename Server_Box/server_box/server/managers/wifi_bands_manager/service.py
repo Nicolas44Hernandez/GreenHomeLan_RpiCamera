@@ -5,8 +5,8 @@ from typing import Iterable
 from flask import Flask
 import yaml
 from telnetlib import Telnet
-from server_box.interfaces.wifi_interface import wifi_telnet_interface
-from server_box.common import ServerBoxException, ErrorCode
+from server.interfaces.wifi_interface import wifi_telnet_interface
+from server.common import ServerBoxException, ErrorCode
 
 # TODO: update commands
 # TODO: update docupmentaiton

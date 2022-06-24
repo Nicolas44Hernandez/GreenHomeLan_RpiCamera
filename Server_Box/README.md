@@ -291,3 +291,42 @@ node server_box.js
 ```
 
 A noter qu'il faut lancer le server_box.js au préalable et qu'il faut faire un ping sur le cloud pour favoriser la découverte qui n'est pour l'instant pas systématique.
+
+
+## **5. Installation du serveur Flask**
+
+il est possible d'exécuter le code dans une post de dev, pour cela il est nécessaire d'avoir installé python 3.9
+
+Pour installer le gestionaire de dependences [poetry](https://python-poetry.org/)
+
+```bash
+ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+```
+
+Configure poetry pour pouvoir créer des environements virtuels dans le repertoire du projet
+
+```bash
+poetry config virtualenvs.in-project true
+```
+
+Creer le environnement virtuel avec les dépendances:
+```bash
+cd server_box
+poetry install
+```
+
+Activer le environnement virtuel:
+```bash
+poetry shell
+```
+
+Pour lancer l'application il faut définir les variables d'environnement:
+```bash
+export FLASK_APP="server_box/server/app:create_app()"
+export FLASK_ENV=development
+```
+
+Pour lancer l'application flask, depuis Server_Box
+```bash
+flask run
+```

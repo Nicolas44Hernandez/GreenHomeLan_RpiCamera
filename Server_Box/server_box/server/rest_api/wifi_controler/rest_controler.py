@@ -3,7 +3,7 @@ from ast import Str
 import logging
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from server_box.managers.wifi_bands_manager import BANDS, wifi_bands_manager_service
+from server.managers.wifi_bands_manager import BANDS, wifi_bands_manager_service
 from .rest_model import WifiStatusSchema
 
 logger = logging.getLogger(__name__)

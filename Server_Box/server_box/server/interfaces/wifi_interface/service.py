@@ -1,7 +1,7 @@
 import logging
 import socket
 import telnetlib
-from server_box.common import ServerBoxException, ErrorCode
+from server.common import ServerBoxException, ErrorCode
 
 logger = logging.getLogger(__name__)
 
