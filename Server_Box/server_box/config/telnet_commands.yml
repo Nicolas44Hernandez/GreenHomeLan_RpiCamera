@@ -12,21 +12,25 @@ WIFI:
         2.4GHz: 
             status: echo  NOT IMPLEMENTED wifi[bands][2.4GHz][status]
             ON: 
-                - echo NOT IMPLEMENTED wifi[bands][2.4GHz][ON]
-                - echo 1
-                - echo 2
-                - echo 3
-            OFF: 
-                - echo NOT IMPLEMENTED wifi[bands][2.4GHz][OFF]
-                - echo 1
-                - echo 2
-                - echo 3
+                - NeMo.Intf.rad2g0.Enable=1
+                - NeMo.Intf.vap2g0priv0.SSID=Orange
+                - NeMo.Intf.rad2g0.AutoChannelEnable=0
+                - NeMo.Intf.rad2g0.Channel=11
+            OFF: NeMo.Intf.rad2g0.Enable=0             
         5GHz: 
             status: echo NOT IMPLEMENTED wifi[bands][5GHz][status]
-            ON: echo NOT IMPLEMENTED wifi[bands][5GHz][ON]
-            OFF: echo NOT IMPLEMENTED wifi[bands][5GHz][OFF]           
+            ON: 
+                - NeMo.Intf.rad5g0.Enable=1
+                - NeMo.Intf.vap5g0priv0.SSID=Orange
+                - NeMo.Intf.rad5g0.AutoChannelEnable=0
+                - NeMo.Intf.rad5g0.Channel=36
+            OFF: NeMo.Intf.rad5g0.Enable=0              
         6GHz: 
             status: echo NOT IMPLEMENTED wifi[bands][6GHz][status]
-            ON: echo NOT IMPLEMENTED wifi[bands][6GHz][ON]
-            OFF: echo NOT IMPLEMENTED wifi[bands][6GHz][OFF]                
+            ON: 
+                - NeMo.Intf.rad6g0.Enable=1
+                - NeMo.Intf.vap6g0priv0.SSID=Orange
+                - NeMo.Intf.rad6g0.AutoChannelEnable=0
+                - NeMo.Intf.rad6g0.Channel=37
+            OFF: NeMo.Intf.rad6g0.Enable=0                
                   
