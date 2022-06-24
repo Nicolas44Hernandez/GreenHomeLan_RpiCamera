@@ -9,6 +9,7 @@ from flask import Flask
 from .managers.wifi_bands_manager import wifi_bands_manager_service
 from .rest_api.wifi_controler import bp as wifi_controler_bp
 from .extension import api
+from .common import ServerBoxException, handle_server_box_exception
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +75,7 @@ def register_extensions(app):
 
 def register_blueprints(app: Flask):
     """Store App APIs blueprints."""
-    # TODO: register error handler
-    #app.register_error_handler(DassException, handle_dass_exception)
+    # Register error handler
+    app.register_error_handler(ServerBoxException, handle_server_box_exception)
     # Register REST blueprints
     api.register_blueprint(wifi_controler_bp)

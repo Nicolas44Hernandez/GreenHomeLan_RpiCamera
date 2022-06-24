@@ -1,10 +1,12 @@
 
 import logging
 from enum import Enum
+from typing import Iterable
 from flask import Flask
 import yaml
 from telnetlib import Telnet
 from server_box.interfaces.wifi_interface import wifi_telnet_interface
+from server_box.common import ServerBoxException, ErrorCode
 
 # TODO: update commands
 # TODO: update docupmentaiton
@@ -24,6 +26,7 @@ class WifiBandsManager:
     livebox_telnet_port: int = 23
     livebox_login: str = None
     livebox_password: str = None
+    telnet_timeout_in_secs: float = 5
     telnet_commands = {}
 
     def __init__(self, app: Flask = None) -> None:
@@ -39,22 +42,19 @@ class WifiBandsManager:
             self.livebox_telnet_port = app.config["LIVEBOX_TELNET_PORT"]
             self.livebox_login = app.config["LIVEBOX_LOGIN"]
             self.livebox_ip_password = app.config["LIVEBOX_PASSWORD"]
+            self.telnet_timeout_in_secs = app.config["TELNET_TIMOUT_IN_SECS"]
             self.load_telnet_commands(app.config["LIVEBOX_TELNET_COMMANDS"])
 
 
-    def create_telnet_conneciton(self) -> Telnet:
+    def create_telnet_connection(self) -> Telnet:
         # Create telnet connection
-        try: 
-            return wifi_telnet_interface(
-                host=self.livebox_ip_address, 
-                port=self.livebox_telnet_port, 
-                login=self.livebox_login, 
-                password=self.livebox_ip_password
-            )
-        except: 
-            # TODO: catch correct error type for not conected
-            logger.error("telnet connection creation failed")            
-            return None 
+        return wifi_telnet_interface(
+            host=self.livebox_ip_address, 
+            port=self.livebox_telnet_port, 
+            login=self.livebox_login, 
+            password=self.livebox_ip_password,
+            telnet_timeout_in_secs=self.telnet_timeout_in_secs,
+        )                    
 
     def load_telnet_commands(self, commands_yaml_file: str):
         """Load the telnet commands dict from file"""
@@ -64,66 +64,57 @@ class WifiBandsManager:
             try:
                 self.telnet_commands=yaml.safe_load(stream)
             except yaml.YAMLError as exc:
-                logger.error("Error in telnet commands load, check commands file")
-                logger.error(exc)
+                raise ServerBoxException(ErrorCode.TELNET_COMMANDS_FILE_ERROR)                
         
-    def get_module_version(self, module: str):
-        """Execute module version in the livebox using telnet service"""        
-        telnet = self.create_telnet_conneciton()
-        if telnet is None: 
-            return None
-        # Retrieve command for get module version
-        try:
-            command = self.telnet_commands["SYSTEM"][module + " version"]
-        except: 
-            logger.error("Module not found: ", module)
-            return None
-        # Execute telnet comand
-        telnet.send_command(command)
+    def execute_telnet_commands(self, dictionary_keys: Iterable[str]):
+        # Retreive commands
+        new_element = self.telnet_commands
+        for key in dictionary_keys:
+            try:
+                new_element = new_element[key]
+            except: 
+                logger.error("Item not found in tenlet commands: ", str[dictionary_keys])
+                raise ServerBoxException(ErrorCode.TELNET_COMMAND_NOT_FOUND)
+        
+        commands = new_element        
+
+        # If the command retrieved is not a str or a list command is wrong
+        if not isinstance(commands, (str, list)):
+            raise ServerBoxException(ErrorCode.TELNET_COMMAND_NOT_FOUND) 
+        
+        # create telnet connection
+        telnet = self.create_telnet_connection()
+
+        if isinstance(commands, str):
+            # Execute telnet comand
+            telnet.send_command(commands)
+
+        elif isinstance(commands, list):
+            # Loop over commands list
+            for command in commands:
+                # Execute telnet comand
+                telnet.send_command(command)
+        
         # Close telnet connection
         telnet.close()
+    
+    def get_module_version(self, module: str):
+        """Execute module version in the livebox using telnet service"""        
+        self.execute_telnet_commands(["SYSTEM",module + " version"])        
 
     def get_wifi_status(self):
         """Execute get wifi status command in the livebox using telnet service"""  
-        telnet = self.create_telnet_conneciton()
-        if telnet is None:             
-            return None
-        # Retrieve command for get wifi status
-        try:
-            command = self.telnet_commands["WIFI"]["status"]
-        except: 
-            logger.error("Item not found in tenlet commands: WIFI[status]")
-            return None
-        # Execute telnet comand
-        telnet.send_command(command)
-        # Close telnet connection
-        telnet.close()
+        self.execute_telnet_commands(["WIFI","status"])       
 
-        #TODO: retreive wifi status from livebox
-        wifi_status = "WIFI: ON/OFF"
+        #TODO: retreive livebox wifi status from return value 
+        wifi_status = True
         return wifi_status
 
     def set_wifi_status(self, status: bool):
         """Execute set wifi status command in the livebox using telnet service"""  
-        
-        telnet = self.create_telnet_conneciton()
-        if telnet is None:             
-            return None
-        # Retrieve command for get wifi status
-        try:
-            command = self.telnet_commands["WIFI"][status]
-        except: 
-            logger.error(
-                f'Item not found in tenlet commands: WIFI[%s]',
-                "ON" if status else "OFF"
-            )
-            return None
-        # Execute telnet comand
-        telnet.send_command(command)
-        # Close telnet connection
-        telnet.close()
+        self.execute_telnet_commands(["WIFI",status]) 
 
-        #TODO: retreive wifi status from livebox
+        #TODO: retreive wifi livebox status from return value
         new_status = status
         return new_status
         
@@ -131,22 +122,9 @@ class WifiBandsManager:
         """Execute get wifi band status command in the livebox using telnet service"""  
         # Check if band number exists
         if band not in BANDS:
-            # TODO: raise exception
-            return None            
-        telnet = self.create_telnet_conneciton()
-        if telnet is None:
-            # TODO: raise exception             
-            return None
-        # Retrieve command for get band status
-        try:
-            command = self.telnet_commands["WIFI"]["bands"][band]["status"]
-        except: 
-            logger.error("Item not found in tenlet commands: WIFI[bands][%s][status]", band)
-            return None
-        # Execute telnet comand
-        telnet.send_command(command)
-        # Close telnet connection
-        telnet.close()
+            raise ServerBoxException(ErrorCode.UNKNOWN_BAND_WIFI) 
+        
+        self.execute_telnet_commands(["WIFI", "bands", band, "status"]) 
 
         #TODO: retreive band status from livebox
         band_status = True
@@ -156,26 +134,9 @@ class WifiBandsManager:
         """Execute set wifi band status command in the livebox using telnet service"""  
         # Check if band number exists
         if band not in BANDS:
-            # TODO: raise exception
-            return None            
-        telnet = self.create_telnet_conneciton()
-        if telnet is None:
-            # TODO: raise exception             
-            return None
-        # Retrieve command for get band status
-        try:
-            command = self.telnet_commands["WIFI"]["bands"][band][status]
-        except:             
-            logger.error(
-                "Item not found in tenlet commands: WIFI[bands][%s][%s]",
-                band,
-                "ON" if status else "OFF"
-            )
-            return None
-        # Execute telnet comand
-        telnet.send_command(command)
-        # Close telnet connection
-        telnet.close()
+            raise ServerBoxException(ErrorCode.UNKNOWN_BAND_WIFI)
+
+        self.execute_telnet_commands(["WIFI", "bands", band, status])        
 
         #TODO: retreive band status from livebox
         band_status = status

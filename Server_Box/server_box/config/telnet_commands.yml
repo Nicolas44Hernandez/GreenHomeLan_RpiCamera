@@ -11,8 +11,16 @@ WIFI:
     bands:
         2.4GHz: 
             status: echo  NOT IMPLEMENTED wifi[bands][2.4GHz][status]
-            ON: echo NOT IMPLEMENTED wifi[bands][2.4GHz][ON]
-            OFF: echo NOT IMPLEMENTED wifi[bands][2.4GHz][OFF]
+            ON: 
+                - echo NOT IMPLEMENTED wifi[bands][2.4GHz][ON]
+                - echo 1
+                - echo 2
+                - echo 3
+            OFF: 
+                - echo NOT IMPLEMENTED wifi[bands][2.4GHz][OFF]
+                - echo 1
+                - echo 2
+                - echo 3
         5GHz: 
             status: echo NOT IMPLEMENTED wifi[bands][5GHz][status]
             ON: echo NOT IMPLEMENTED wifi[bands][5GHz][ON]

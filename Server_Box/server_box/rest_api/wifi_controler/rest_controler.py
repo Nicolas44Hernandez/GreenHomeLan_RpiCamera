@@ -68,11 +68,7 @@ class WifiStatusApi(MethodView):
         # TODO: use class for translate schema to object
         """
         Set wifi band status
-        """
-        #TODO: update doc
-        if band not in BANDS:
-            # Raise exception
-            return None
+        """        
         new_status = wifi_bands_manager_service.set_band_status(band, args["status"])
 
         # TODO: build response
