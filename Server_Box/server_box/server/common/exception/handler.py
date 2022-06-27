@@ -5,7 +5,7 @@ from .model import ServerBoxException
 
 
 def handle_server_box_exception(ex: ServerBoxException):
-    """ Customize returned body """
+    """Customize returned body"""
 
     # Create error response
     response = {

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def create_app(
     config_dir: str = path.join(path.dirname(path.abspath(__file__)), "config"),
 ):
-    """ Create the Flask app """
+    """Create the Flask app"""
 
     # Create app Flask
     app = Flask("Server Box")
@@ -34,7 +34,7 @@ def create_app(
 
     # Load configuration
     app.config.from_file(app_config, load=yaml.full_load)
-    
+
     # Register extensions
     register_extensions(app)
     # Register blueprints for REST API
@@ -45,7 +45,7 @@ def create_app(
 
 
 def register_extensions(app):
-    """ Initialize all extensions """
+    """Initialize all extensions"""
 
     # Initialize REST APIs.
     #
@@ -67,10 +67,9 @@ def register_extensions(app):
             },
         },
     )
-    
+
     # Wifi bands manager extension
     wifi_bands_manager_service.init_app(app=app)
-    
 
 
 def register_blueprints(app: Flask):

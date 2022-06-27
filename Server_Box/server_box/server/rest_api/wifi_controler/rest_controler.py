@@ -12,63 +12,59 @@ bp = Blueprint("wifi", __name__, url_prefix="/wifi")
 """ The api blueprint. Should be registered in app main api object """
 
 
-# TODO: Errors management in apis reponses
-
 @bp.route("/")
 class WifiStatusApi(MethodView):
     """API to retrieve wifi general status"""
+
     @bp.doc(
         security=[{"tokenAuth": []}],
         responses={400: "BAD_REQUEST", 404: "NOT_FOUND"},
     )
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def get(self):
-        """
-        """
-        #TOOD: update doc
+        """Get livebox wifi status"""
         status = wifi_bands_manager_service.get_wifi_status()
-        
+
         # TODO: build response
         return {"status": status}
 
-    @bp.doc(security=[{"tokenAuth": []}], responses={ 400: "BAD_REQUEST"})
+    @bp.doc(security=[{"tokenAuth": []}], responses={400: "BAD_REQUEST"})
     @bp.arguments(WifiStatusSchema, location="query")
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def post(self, args: WifiStatusSchema):
         # TODO: use class for translate schema to object
         """
-        Set wifi status
+        Set lovebox wifi status
         """
         new_status = wifi_bands_manager_service.set_wifi_status(args["status"])
 
         # TODO: build response
         return {"status": new_status}
-    
+
 
 @bp.route("/bands/<band>")
 class WifiStatusApi(MethodView):
     """API to retrieve wifi band status"""
+
     @bp.doc(
         security=[{"tokenAuth": []}],
         responses={400: "BAD_REQUEST", 404: "NOT_FOUND"},
     )
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def get(self, band: str):
-        """
-        """
-        #TODO: update doc
+        """Get wifi band status"""
         new_status = wifi_bands_manager_service.get_band_status(band)
-        
+
         return {"status": new_status}
 
-    @bp.doc(security=[{"tokenAuth": []}], responses={ 400: "BAD_REQUEST"})
+    @bp.doc(security=[{"tokenAuth": []}], responses={400: "BAD_REQUEST"})
     @bp.arguments(WifiStatusSchema, location="query")
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def post(self, args: WifiStatusSchema, band: str):
         # TODO: use class for translate schema to object
         """
         Set wifi band status
-        """        
+        """
         new_status = wifi_bands_manager_service.set_band_status(band, args["status"])
 
         # TODO: build response
