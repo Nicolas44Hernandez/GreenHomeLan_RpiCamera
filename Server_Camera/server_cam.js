@@ -53,6 +53,9 @@ async function setWifiOn(type_command){
     if (type_command == "web"){
         console.log("wifi on by web");
     }
+    command = `python3 captureVideo.py`;
+    exec(command);
+    console.log("captureVideo Launched!");
 }
 
 async function setWifiOff(){
@@ -62,6 +65,9 @@ async function setWifiOff(){
     exec(command);
     console.log("       LED Wi-Fi is off");
     console.log("       Wi-FI is off");
+    command = `kill $(ps aux | grep '[p]ython3 captureVideo.py' | awk '{print $2}')`;
+    exec(command);
+    console.log("       kill process captureVideo.py");  
 }
 
 function getFrame(res) {
