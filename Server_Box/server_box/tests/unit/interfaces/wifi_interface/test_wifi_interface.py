@@ -66,6 +66,7 @@ def test_create_superuser_session(telnet):
     assert telnet.super_user_session
 
 
+# TODO: Update test
 def test_send_command(telnet):
     # GIVEN
     command = "echo test-send-command"
@@ -75,3 +76,11 @@ def test_send_command(telnet):
 
     # THEN
     # No exception raised
+
+
+def test_parce_telnet_output():
+    pass
+
+
+def test_get_command_output():
+    pass

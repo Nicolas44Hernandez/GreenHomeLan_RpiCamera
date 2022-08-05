@@ -3,8 +3,8 @@ from ast import Str
 import logging
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from server.managers.wifi_bands_manager import BANDS, wifi_bands_manager_service
-from .rest_model import WifiStatusSchema
+from server.managers.wifi_bands_manager import wifi_bands_manager_service
+from .rest_model import WifiStatusSchema, MacAdressListSchema
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +24,6 @@ class WifiStatusApi(MethodView):
     def get(self):
         """Get livebox wifi status"""
         status = wifi_bands_manager_service.get_wifi_status()
-
-        # TODO: build response
         return {"status": status}
 
     @bp.doc(security=[{"tokenAuth": []}], responses={400: "BAD_REQUEST"})
@@ -38,12 +36,11 @@ class WifiStatusApi(MethodView):
         """
         new_status = wifi_bands_manager_service.set_wifi_status(args["status"])
 
-        # TODO: build response
         return {"status": new_status}
 
 
 @bp.route("/bands/<band>")
-class WifiStatusApi(MethodView):
+class WifiBandsStatusApi(MethodView):
     """API to retrieve wifi band status"""
 
     @bp.doc(
@@ -53,19 +50,49 @@ class WifiStatusApi(MethodView):
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def get(self, band: str):
         """Get wifi band status"""
-        new_status = wifi_bands_manager_service.get_band_status(band)
+        status = wifi_bands_manager_service.get_band_status(band)
 
-        return {"status": new_status}
+        return {"status": status}
 
     @bp.doc(security=[{"tokenAuth": []}], responses={400: "BAD_REQUEST"})
     @bp.arguments(WifiStatusSchema, location="query")
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def post(self, args: WifiStatusSchema, band: str):
-        # TODO: use class for translate schema to object
         """
         Set wifi band status
         """
         new_status = wifi_bands_manager_service.set_band_status(band, args["status"])
 
-        # TODO: build response
         return {"status": new_status}
+
+
+@bp.route("/stations/")
+class WifiConnectedStationsApi(MethodView):
+    """API to connected stations list"""
+
+    @bp.doc(
+        security=[{"tokenAuth": []}],
+        responses={400: "BAD_REQUEST", 404: "NOT_FOUND"},
+    )
+    @bp.response(status_code=200, schema=MacAdressListSchema)
+    def get(self):
+        """Get connected stations"""
+        stations = wifi_bands_manager_service.get_connected_stations_mac_list()
+
+        return {"mac_list": stations}
+
+
+@bp.route("/stations/<band>")
+class WifiConnectedStationsApi(MethodView):
+    """API to connected stations list for a band"""
+
+    @bp.doc(
+        security=[{"tokenAuth": []}],
+        responses={400: "BAD_REQUEST", 404: "NOT_FOUND"},
+    )
+    @bp.response(status_code=200, schema=MacAdressListSchema)
+    def get(self, band: str):
+        """Get connected stations"""
+        stations = wifi_bands_manager_service.get_connected_stations_mac_list(band)
+
+        return {"mac_list": stations}

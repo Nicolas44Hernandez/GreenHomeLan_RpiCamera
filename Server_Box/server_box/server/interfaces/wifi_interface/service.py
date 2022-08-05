@@ -1,6 +1,10 @@
+"""
+Telnet connection service
+"""
 import logging
 import socket
 import telnetlib
+import time
 from server.common import ServerBoxException, ErrorCode
 
 logger = logging.getLogger(__name__)
@@ -27,6 +31,7 @@ class Telnet:
 
     def create_telnet_connection(self):
         """Create telnet connection with host"""
+
         # try to connect
         try:
             tn_connection = telnetlib.Telnet(
@@ -68,46 +73,38 @@ class Telnet:
         try:
             self.connection.write(b"exit\n")
         except (socket.timeout, socket.error):
+            logger.error("Error in telnet connection")
             raise ServerBoxException(ErrorCode.TELNET_CONNECTION_ERROR)
         logger.debug(f"Telnet connection closed with host: %s", self.host)
 
-    def send_command(self, command: str):
+    def send_command(self, command: str) -> str:
         """Send command to telnet host"""
         if "sudo " in command:
             self.create_super_user_session()
-            filter = (self.login + "#").encode("utf-8")
-        else:
-            filter = (self.login + "@").encode("utf-8")
         try:
-            self.connection.read_until(filter, timeout=self.telnet_timeout_in_secs)
-            command = command + "\n"
-            self.connection.write(command.encode("utf-8"))
-            self.log_command_output(command)
+            command = f"echo -n 'EE''EE '; {command}; echo 'FF''FF'\n"
+            self.connection.write(command.encode("ascii"))
+            return self.get_command_output()
         except (socket.timeout, socket.error):
             raise ServerBoxException(ErrorCode.TELNET_CONNECTION_ERROR)
 
-    def log_command_output(self, command: str):
-        """Log the output of excecuted command"""
-        # TODO: process command result
-        logger.debug("--------------------Executed command------------------------")
-        logger.debug(f"Command:\n%s", command)
-        output = ""
-        if "sudo " in command:
-            filter = (self.login + "#").encode("utf-8")
-        else:
-            filter = (self.login + "@").encode("utf-8")
-        while True:
-            try:
-                data = self.connection.read_some()  # read available data
-            except (socket.timeout, socket.error):
-                raise ServerBoxException(ErrorCode.TELNET_CONNECTION_ERROR)
+    def send_fast_command(self, command: str):
+        """Send command without waiting for response"""
+        command = command + "\n"
+        self.connection.write(command.encode("ascii"))
+        time.sleep(0.1)
+        return "OK"
 
-            if any(x in data for x in [b"\n", b"~$"]):
-                output += data.decode("utf-8")
-            # check if it is the last line
-            if filter in data:
-                # remove last line
-                output = output[: output.rfind("\n")]
-                logger.debug(f"Output:\n%s", output)
-                logger.debug("-------------------------------------------------------------")
-                break
+    def parse_telnet_output(self, raw_output: str):
+        """Parse the output of the sent command"""
+        _splitted_patern = raw_output.split("EEEE")
+        return _splitted_patern[len(_splitted_patern) - 1].split("FFFF")[0].lstrip()[:-2]
+
+    def get_command_output(self):
+        """retrieve and parse command output"""
+
+        # retrieve output
+        output_brut = self.connection.read_until(b"FFFF", 3).decode("ascii")
+
+        # parse output
+        return str(self.parse_telnet_output(output_brut))

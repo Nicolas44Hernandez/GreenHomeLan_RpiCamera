@@ -3,11 +3,11 @@
 import logging
 from logging.config import dictConfig
 from os import path
-from re import I
 import yaml
 from flask import Flask
 from .managers.wifi_bands_manager import wifi_bands_manager_service
 from .rest_api.wifi_controler import bp as wifi_controler_bp
+from .rest_api.system_version_controler import bp as system_version_controler_bp
 from .extension import api
 from .common import ServerBoxException, handle_server_box_exception
 
@@ -78,3 +78,4 @@ def register_blueprints(app: Flask):
     app.register_error_handler(ServerBoxException, handle_server_box_exception)
     # Register REST blueprints
     api.register_blueprint(wifi_controler_bp)
+    api.register_blueprint(system_version_controler_bp)

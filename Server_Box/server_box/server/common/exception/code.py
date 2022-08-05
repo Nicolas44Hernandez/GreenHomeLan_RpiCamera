@@ -12,6 +12,8 @@ class ErrorCode(Enum):
     TELNET_COMMANDS_FILE_ERROR = (2, 500, "Error in telnet commands load, check commands file")
     TELNET_COMMAND_NOT_FOUND = (3, 500, "Telnet command not found, check config")
     UNKNOWN_BAND_WIFI = (4, 400, "Wifi band doesnt exist")
+    MODULE_NOT_FOUND = (5, 400, "Module not found in RPI box")
+    STATUS_CHANGE_TIMER = (6, 500, "Wifi status change is taking too long, verify wifi status")
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):
