@@ -5,8 +5,13 @@ from logging.config import dictConfig
 from os import path
 import yaml
 from flask import Flask
+
 from .managers.wifi_bands_manager import wifi_bands_manager_service
+from .managers.thread_manager import thread_manager_service
+from .managers.camera_manager import camera_manager_service
 from .rest_api.wifi_controler import bp as wifi_controler_bp
+from .rest_api.thread_controler import bp as thread_controler_bp
+from .rest_api.camera_controler import bp as camera_controler_bp
 from .rest_api.system_version_controler import bp as system_version_controler_bp
 from .extension import api
 from .common import ServerBoxException, handle_server_box_exception
@@ -70,6 +75,10 @@ def register_extensions(app):
 
     # Wifi bands manager extension
     wifi_bands_manager_service.init_app(app=app)
+    # Thread manager extension
+    thread_manager_service.init_app(app=app)
+    # Camera manager service
+    camera_manager_service.init_app(app=app)
 
 
 def register_blueprints(app: Flask):
@@ -78,4 +87,6 @@ def register_blueprints(app: Flask):
     app.register_error_handler(ServerBoxException, handle_server_box_exception)
     # Register REST blueprints
     api.register_blueprint(wifi_controler_bp)
+    api.register_blueprint(thread_controler_bp)
+    api.register_blueprint(camera_controler_bp)
     api.register_blueprint(system_version_controler_bp)

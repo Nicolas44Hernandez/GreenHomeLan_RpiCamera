@@ -14,6 +14,8 @@ class ErrorCode(Enum):
     UNKNOWN_BAND_WIFI = (4, 400, "Wifi band doesnt exist")
     MODULE_NOT_FOUND = (5, 400, "Module not found in RPI box")
     STATUS_CHANGE_TIMER = (6, 500, "Wifi status change is taking too long, verify wifi status")
+    THREAD_CONFIG_FILE_ERROR = (7, 500, "Error in Thread configuration load, check file")
+    THREAD_NODE_NOT_CONFIGURED = (8, 400, "Thread node not configured, check thread config file")
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):
