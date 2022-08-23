@@ -1,3 +1,3 @@
 """Wifi bands managment package"""
 from .service import wifi_bands_manager_service
-from .service import BANDS, Status
+from .service import BANDS

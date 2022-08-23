@@ -16,6 +16,8 @@ class ErrorCode(Enum):
     STATUS_CHANGE_TIMER = (6, 500, "Wifi status change is taking too long, verify wifi status")
     THREAD_CONFIG_FILE_ERROR = (7, 500, "Error in Thread configuration load, check file")
     THREAD_NODE_NOT_CONFIGURED = (8, 400, "Thread node not configured, check thread config file")
+    INVALID_RELAY_NUMBER = (9, 400, "Invalid relay number")
+    RELAYS_STATUS_NOT_RECEIVED = (10, 400, "The relays status have not been received yet")
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):

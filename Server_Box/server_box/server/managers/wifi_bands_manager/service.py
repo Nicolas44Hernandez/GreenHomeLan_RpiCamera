@@ -18,11 +18,6 @@ STATUS_CHANGE_TIMEOUT_IN_SECS = 15
 # TODO: logs
 
 
-class Status(Enum):
-    OFF = 0
-    ON = 1
-
-
 class WifiBandsManager:
     """Manager for wifi control"""
 

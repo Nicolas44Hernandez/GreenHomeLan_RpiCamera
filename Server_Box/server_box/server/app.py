@@ -9,9 +9,11 @@ from flask import Flask
 from .managers.wifi_bands_manager import wifi_bands_manager_service
 from .managers.thread_manager import thread_manager_service
 from .managers.camera_manager import camera_manager_service
+from .managers.electrical_panel_manager import electrical_panel_manager_service
 from .rest_api.wifi_controler import bp as wifi_controler_bp
 from .rest_api.thread_controler import bp as thread_controler_bp
 from .rest_api.camera_controler import bp as camera_controler_bp
+from .rest_api.electrical_panel_controler import bp as electrical_panel_controler_bp
 from .rest_api.system_version_controler import bp as system_version_controler_bp
 from .extension import api
 from .common import ServerBoxException, handle_server_box_exception
@@ -79,6 +81,8 @@ def register_extensions(app):
     thread_manager_service.init_app(app=app)
     # Camera manager service
     camera_manager_service.init_app(app=app)
+    # Electrical panel manager service
+    electrical_panel_manager_service.init_app(app=app)
 
 
 def register_blueprints(app: Flask):
@@ -89,4 +93,5 @@ def register_blueprints(app: Flask):
     api.register_blueprint(wifi_controler_bp)
     api.register_blueprint(thread_controler_bp)
     api.register_blueprint(camera_controler_bp)
+    api.register_blueprint(electrical_panel_controler_bp)
     api.register_blueprint(system_version_controler_bp)
