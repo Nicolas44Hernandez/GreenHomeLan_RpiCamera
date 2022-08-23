@@ -20,6 +20,11 @@ loggers:
     handlers: [console]
     propagate: no
 
+  server_box.orchestrator:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+
   server_box.interfaces:
       level: DEBUG
       handlers: [console]
@@ -29,12 +34,12 @@ loggers:
       level: DEBUG
       handlers: [console]
       propagate: no
-    
+
   server_box.rest_api:
       level: DEBUG
       handlers: [console]
       propagate: no
-    
+
   api.rest:
       level: DEBUG # Must be set to INFO to be active
       handlers: [console]

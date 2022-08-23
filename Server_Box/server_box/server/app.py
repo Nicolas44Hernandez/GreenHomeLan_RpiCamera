@@ -15,6 +15,7 @@ from .rest_api.thread_controler import bp as thread_controler_bp
 from .rest_api.camera_controler import bp as camera_controler_bp
 from .rest_api.electrical_panel_controler import bp as electrical_panel_controler_bp
 from .rest_api.system_version_controler import bp as system_version_controler_bp
+from .orchestrator import orchestrator_service
 from .extension import api
 from .common import ServerBoxException, handle_server_box_exception
 
@@ -44,6 +45,8 @@ def create_app(
 
     # Register extensions
     register_extensions(app)
+    # register orchestrator
+    register_orchestrator(app)
     # Register blueprints for REST API
     register_blueprints(app)
     logger.info("App ready!!")
@@ -51,7 +54,7 @@ def create_app(
     return app
 
 
-def register_extensions(app):
+def register_extensions(app: Flask):
     """Initialize all extensions"""
 
     # Initialize REST APIs.
@@ -83,6 +86,11 @@ def register_extensions(app):
     camera_manager_service.init_app(app=app)
     # Electrical panel manager service
     electrical_panel_manager_service.init_app(app=app)
+
+
+def register_orchestrator(app: Flask):
+    """Initialize Orchestrator"""
+    orchestrator_service.init_app(app=app)
 
 
 def register_blueprints(app: Flask):

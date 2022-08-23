@@ -1,6 +1,5 @@
 import logging
 import subprocess
-from enum import Enum
 from typing import Iterable
 from flask import Flask
 import yaml
