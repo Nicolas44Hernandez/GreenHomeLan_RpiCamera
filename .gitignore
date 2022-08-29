@@ -15,16 +15,10 @@ Server_Box/.vscode
 # Environments
 .venv
 
-# Visual Studio Code settings
-.vscode
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Poetry
-poetry.lock
 
 # Unit test / coverage reports
 htmlcov/

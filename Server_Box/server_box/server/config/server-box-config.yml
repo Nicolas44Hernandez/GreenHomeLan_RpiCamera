@@ -10,8 +10,7 @@ OPENAPI_SWAGGER_UI_PATH: /docs
 OPENAPI_SWAGGER_UI_URL: https://cdn.jsdelivr.net/npm/swagger-ui-dist/
 
 # Telnet connection configuration
-LIVEBOX_IP_ADDRESS: 192.168.1.1 # LIVEBOX
-# LIVEBOX_IP_ADDRESS: localhost # LOCAL
+LIVEBOX_IP_ADDRESS: localhost # LIVEBOX
 LIVEBOX_TELNET_PORT: 23
 LIVEBOX_LOGIN: root
 LIVEBOX_PASSWORD: sah
