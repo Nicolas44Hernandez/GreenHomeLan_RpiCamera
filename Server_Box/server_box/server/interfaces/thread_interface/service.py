@@ -4,6 +4,8 @@ Thread interface service
 import logging
 import yaml
 import subprocess
+import shlex
+import threading
 from typing import Iterable
 from server.common import ServerBoxException, ErrorCode
 
@@ -23,17 +25,51 @@ class ThreadNode:
         self.url = url
 
 
-class Thread:
+class ThreadBoarderRouter(threading.Thread):
     """Service class for thread network setup management"""
 
     sudo_password: str
     thread_network_setup = {}
     nodes = Iterable[ThreadNode]
+    running: bool
+    msg_callback: callable
 
     def __init__(self, sudo_password: str, thread_network_config_file: str):
         self.sudo_password = sudo_password
+        self.msg_callback = None
+
         # setup thread network
         self.setup_thread_network(thread_network_config_file)
+
+        # Running flag
+        self.running = True
+
+        # Call Super constructor
+        super(ThreadBoarderRouter, self).__init__(name="ThreadBorderRouterThread")
+        self.setDaemon(True)
+
+    def run(self):
+        """Run thread"""
+        process = subprocess.Popen(shlex.split("sudo ot-ctl"), stdout=subprocess.PIPE)
+        while self.running:
+            try:
+                output = process.stdout.readline()
+                if output == "" and process.poll() is not None:
+                    break
+                elif output:
+                    logger.info("Thread Message received")
+                    msg = output.strip().split()[-1].decode()
+                    if self.msg_callback is None:
+                        logger.error("Message reception callback is None")
+                        break
+                    self.msg_callback(msg)
+            except KeyboardInterrupt:
+                break
+        logger.info("End of Border Router thread")
+
+    def set_msg_reception_callback(self, callback: callable):
+        """Set Thread message reception callback"""
+        self.msg_callback = callback
 
     def setup_thread_network(self, thread_network_config_file: str):
         """Setup the thread network"""
@@ -59,11 +95,13 @@ class Thread:
             cmd2 = subprocess.Popen(["sudo", "-S"] + cmd, stdin=cmd1.stdout, stdout=subprocess.PIPE)
             if "ipaddr" in command:
                 output = cmd2.stdout.read().decode()
-                self.thread_network_setup["ip6v_otbr"] = output[-3]
-                self.thread_network_setup["ip6v_mesh"] = output[-4]
+                out = output.split("\r\n")[:-2]
+                self.thread_network_setup["ip6v_otbr"] = out[3]
+                self.thread_network_setup["ip6v_mesh"] = out[-1]
             elif "dataset active -x" in command:
                 output = cmd2.stdout.read().decode()
-                self.thread_network_setup["dataset"] = output[-3]
+                out = output.split("\r\n")
+                self.thread_network_setup["dataset"] = out[0]
         logger.debug(f"Thread network config: {self.thread_network_setup}")
 
     def getNodes(self) -> Iterable[ThreadNode]:

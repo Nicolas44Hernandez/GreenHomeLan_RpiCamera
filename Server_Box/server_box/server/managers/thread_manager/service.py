@@ -2,6 +2,7 @@ import logging
 from typing import Iterable
 from flask import Flask
 import requests
+from requests.exceptions import ConnectionError
 
 from server.managers.wifi_bands_manager import wifi_bands_manager_service
 from server.interfaces.thread_interface import ThreadInterface, ThreadNode
@@ -31,9 +32,20 @@ class ThreadManager:
                 sudo_password=app.config["SUDO_PASSWORD"],
                 thread_network_config_file=app.config["THREAD_NETWORK_CONFIG"],
             )
+            # TODO: Verify thread dependency on main thread
+            self.thread_interface.start()
+            # self.thread_interface.join()
 
-    def send_thread_network_info_to_node(self, node_name: str):
-        """send thread network config to node"""
+            # Send thread network info to all nodes in config
+            if not self.send_thread_network_info_to_all_nodes():
+                logger.error("Eror when posting network info to thread nodes")
+
+    def set_msg_reception_callback(self, callback: callable):
+        """Set message reception callback"""
+        self.thread_interface.set_msg_reception_callback(callback)
+
+    def send_thread_network_info_to_node(self, node_name: str) -> bool:
+        """send thread network config to node return False if error in post"""
 
         dest_node: ThreadNode = None
         for node in self.thread_interface.getNodes():
@@ -46,14 +58,26 @@ class ThreadManager:
             raise ServerBoxException(ErrorCode.THREAD_NODE_NOT_CONFIGURED)
 
         # send network info to node server
-        # TODO: try catch
-        node_response = requests.post(dest_node.url, json=self.thread_network_setup)
-        logger.debug(f"Node server response: {node_response.text}")
+        # TODO: is there a way to get the IP Automatically knowing the MAC?
+        try:
+            node_response = requests.post(
+                dest_node.url, json=self.thread_interface.thread_network_setup
+            )
+            logger.debug(f"Node server response: {node_response.text}")
+            return True
+        except ConnectionError:
+            logger.error(
+                f"Error when posting network info to thread node {dest_node.name}, check if node"
+                " server is running"
+            )
+            return False
 
-    def send_thread_network_info_to_all_nodes(self):
+    def send_thread_network_info_to_all_nodes(self) -> bool:
         """send thread network config to all the nodes"""
         for node in self.thread_interface.getNodes():
-            self.send_thread_network_info_to_node(node.name)
+            if not self.send_thread_network_info_to_node(node.name):
+                return False
+        return True
 
     def get_thread_nodes(self) -> Iterable[ThreadNode]:
         """return all the configured thread nodes"""

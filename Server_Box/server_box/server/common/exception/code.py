@@ -18,6 +18,7 @@ class ErrorCode(Enum):
     THREAD_NODE_NOT_CONFIGURED = (8, 400, "Thread node not configured, check thread config file")
     INVALID_RELAY_NUMBER = (9, 400, "Invalid relay number")
     RELAYS_STATUS_NOT_RECEIVED = (10, 400, "The relays status have not been received yet")
+    THREAD_NODE_UNREACHABLE = (11, 500, "Node server is unreachable, check if node is running")
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):

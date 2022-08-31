@@ -4,6 +4,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from .rest_model import NodeSchema
 from server.managers.thread_manager import thread_manager_service
+from server.common import ServerBoxException, ErrorCode
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,8 @@ class SetupThreadNetworkAllNodes(MethodView):
         """
         Set Thread network args to all the nodes
         """
-        thread_manager_service.send_thread_network_info_to_all_nodes()
+        if not thread_manager_service.send_thread_network_info_to_all_nodes():
+            raise ServerBoxException(ErrorCode.THREAD_NODE_UNREACHABLE)
 
 
 @bp.route("/setup/<node>")
@@ -34,7 +36,8 @@ class SetupThreadNetworkSingleNode(MethodView):
         """
         Send network info to node
         """
-        thread_manager_service.send_thread_network_info_to_node(node_name=node)
+        if not thread_manager_service.send_thread_network_info_to_node(node_name=node):
+            raise ServerBoxException(ErrorCode.THREAD_NODE_UNREACHABLE)
 
 
 @bp.route("/nodes")

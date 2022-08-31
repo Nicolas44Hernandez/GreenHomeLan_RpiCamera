@@ -6,6 +6,7 @@ from timeloop import Timeloop
 from .model import WifiBandStatus, WifiStatus
 from server.managers.wifi_bands_manager import wifi_bands_manager_service, BANDS
 from server.managers.electrical_panel_manager import electrical_panel_manager_service
+from server.managers.thread_manager import thread_manager_service
 from server.interfaces.mqtt_interface import SingleRelayStatus, RelaysStatus
 
 
@@ -37,6 +38,9 @@ class Orchestrator:
 
             # Schedule ressources polling
             self.schedule_resources_status_polling()
+
+            # Run notification module
+            self.init_notification_module()
 
     def send_relays_command(self, bands_status: Iterable[WifiBandStatus]):
         """Send MQTT command to electrical pannel to represent the wifi bands status"""
@@ -85,6 +89,14 @@ class Orchestrator:
             self.send_relays_command(bands_status=bands_status)
 
         resources_status_timeloop.start(block=False)
+
+    def thread_msg_reception_callback(self, msg: str):
+        """Callback for thread notification message reception"""
+        logger.info(f"Thread received message: {msg}")
+
+    def init_notification_module(self):
+        """Initialize the notification callbacks for the orchestrator"""
+        thread_manager_service.set_msg_reception_callback(self.thread_msg_reception_callback)
 
 
 orchestrator_service: Orchestrator = Orchestrator()

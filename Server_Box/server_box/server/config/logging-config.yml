@@ -15,32 +15,32 @@ root:
   handlers: [console]
 
 loggers:
-  server_box.app:
+  server.app:
     level: DEBUG
     handlers: [console]
     propagate: no
 
-  server_box.orchestrator:
+  server.orchestrator:
     level: DEBUG
     handlers: [console]
     propagate: no
 
-  server_box.interfaces:
+  server.interfaces:
       level: DEBUG
       handlers: [console]
       propagate: no
 
-  server_box.managers:
+  server.managers:
       level: DEBUG
       handlers: [console]
       propagate: no
 
-  server_box.rest_api:
+  server.rest_api:
       level: DEBUG
       handlers: [console]
       propagate: no
 
-  api.rest:
+  server.rest_api:
       level: DEBUG # Must be set to INFO to be active
       handlers: [console]
       propagate: no
