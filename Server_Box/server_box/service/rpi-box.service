@@ -1,0 +1,14 @@
+[Unit]
+Description=RPI Box
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/nico/GreenHomeLan_Camera/Server_Box
+Environment=FLASK_CONFIG=production
+Environment=FLASK_APP="server_box/server/app:create_app()"
+ExecStart=/home/nico/GreenHomeLan_Camera/Server_Box/server_box/.venv/bin/flask run --host '0.0.0.0'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
