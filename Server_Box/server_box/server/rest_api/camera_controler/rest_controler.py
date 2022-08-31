@@ -24,5 +24,6 @@ class CameraStatusApi(MethodView):
     @bp.response(status_code=200, schema=CameraStatusSchema)
     def get(self):
         """Get camera connection status"""
+        logger.info(f"GET camera/")
         connection_status = camera_manager_service.camera_is_connected()
         return {"connected": connection_status}

@@ -22,6 +22,8 @@ class SetupThreadNetworkAllNodes(MethodView):
         """
         Set Thread network args to all the nodes
         """
+        logger.info(f"POST thread/setup")
+
         if not thread_manager_service.send_thread_network_info_to_all_nodes():
             raise ServerBoxException(ErrorCode.THREAD_NODE_UNREACHABLE)
 
@@ -36,6 +38,7 @@ class SetupThreadNetworkSingleNode(MethodView):
         """
         Send network info to node
         """
+        logger.info(f"GET post/thread/setup/node/{node}")
         if not thread_manager_service.send_thread_network_info_to_node(node_name=node):
             raise ServerBoxException(ErrorCode.THREAD_NODE_UNREACHABLE)
 
@@ -51,5 +54,6 @@ class ThreadNodesApi(MethodView):
     @bp.response(status_code=200, schema=NodeSchema(many=True))
     def get(self):
         """Get configured thread nodes"""
+        logger.info(f"GET thread/nodes")
         nodes = thread_manager_service.get_thread_nodes()
         return nodes

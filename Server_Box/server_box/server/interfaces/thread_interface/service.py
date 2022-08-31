@@ -102,7 +102,7 @@ class ThreadBoarderRouter(threading.Thread):
                 output = cmd2.stdout.read().decode()
                 out = output.split("\r\n")
                 self.thread_network_setup["dataset"] = out[0]
-        logger.debug(f"Thread network config: {self.thread_network_setup}")
+        logger.info(f"Thread network config: {self.thread_network_setup}")
 
     def getNodes(self) -> Iterable[ThreadNode]:
         """Returns the configured nodes"""

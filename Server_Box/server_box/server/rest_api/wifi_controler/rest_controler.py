@@ -23,6 +23,7 @@ class WifiStatusApi(MethodView):
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def get(self):
         """Get livebox wifi status"""
+        logger.info(f"GET wifi/")
         status = wifi_bands_manager_service.get_wifi_status()
         return {"status": status}
 
@@ -32,8 +33,11 @@ class WifiStatusApi(MethodView):
     def post(self, args: WifiStatusSchema):
         # TODO: use class for translate schema to object
         """
-        Set lovebox wifi status
+        Set livebox wifi status
         """
+        logger.info(f"POST wifi/")
+        logger.info(f"status: {args}")
+
         new_status = wifi_bands_manager_service.set_wifi_status(args["status"])
 
         return {"status": new_status}
@@ -50,6 +54,8 @@ class WifiBandsStatusApi(MethodView):
     @bp.response(status_code=200, schema=WifiStatusSchema)
     def get(self, band: str):
         """Get wifi band status"""
+        logger.info(f"GET wifi/bands/{band}")
+
         status = wifi_bands_manager_service.get_band_status(band)
 
         return {"status": status}
@@ -61,6 +67,9 @@ class WifiBandsStatusApi(MethodView):
         """
         Set wifi band status
         """
+        logger.info(f"POST wifi/bands/{band}")
+        logger.info(f"satus: {args}")
+
         new_status = wifi_bands_manager_service.set_band_status(band, args["status"])
 
         return {"status": new_status}
@@ -77,6 +86,8 @@ class WifiConnectedStationsApi(MethodView):
     @bp.response(status_code=200, schema=MacAdressListSchema)
     def get(self):
         """Get connected stations"""
+        logger.info(f"GET wifi/stations/")
+
         stations = wifi_bands_manager_service.get_connected_stations_mac_list()
 
         return {"mac_list": stations}
@@ -93,6 +104,8 @@ class WifiConnectedStationsApi(MethodView):
     @bp.response(status_code=200, schema=MacAdressListSchema)
     def get(self, band: str):
         """Get connected stations"""
+        logger.info(f"GET wifi/stations/{band}")
+
         stations = wifi_bands_manager_service.get_connected_stations_mac_list(band)
 
         return {"mac_list": stations}

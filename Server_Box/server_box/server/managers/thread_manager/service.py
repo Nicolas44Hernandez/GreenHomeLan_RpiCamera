@@ -23,7 +23,7 @@ class ThreadManager:
     def init_app(self, app: Flask) -> None:
         """Initialize ThreadManager"""
         if app is not None:
-            logger.debug("initializing the ThreadManager")
+            logger.info("initializing the ThreadManager")
 
             # TODO: Veryfy that WIFI is ON before continue otherwise turn it on
 
@@ -63,7 +63,7 @@ class ThreadManager:
             node_response = requests.post(
                 dest_node.url, json=self.thread_interface.thread_network_setup
             )
-            logger.debug(f"Node server response: {node_response.text}")
+            logger.info(f"Node server response: {node_response.text}")
             return True
         except ConnectionError:
             logger.error(

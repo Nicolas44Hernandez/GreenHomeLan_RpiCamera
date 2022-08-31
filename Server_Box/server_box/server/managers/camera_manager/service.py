@@ -16,7 +16,7 @@ class CameraManager:
     def init_app(self, app: Flask) -> None:
         """Initialize CameraManager"""
         if app is not None:
-            logger.debug("initializing the CameraManager")
+            logger.info("initializing the CameraManager")
 
     def camera_is_connected(self) -> bool:
         """Check if camera is connected to the livebox"""

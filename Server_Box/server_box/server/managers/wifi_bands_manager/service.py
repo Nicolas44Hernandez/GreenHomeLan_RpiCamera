@@ -34,7 +34,7 @@ class WifiBandsManager:
     def init_app(self, app: Flask) -> None:
         """Initialize WifiBandsManager"""
         if app is not None:
-            logger.debug("initializing the WifiBandsManager")
+            logger.info("initializing the WifiBandsManager")
             # Initialize configuration
             self.livebox_ip_address = app.config["LIVEBOX_IP_ADDRESS"]
             self.livebox_telnet_port = app.config["LIVEBOX_TELNET_PORT"]

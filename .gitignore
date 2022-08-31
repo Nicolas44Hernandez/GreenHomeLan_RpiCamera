@@ -30,3 +30,6 @@ coverage.xml
 cover/
 report/
 coverage/
+
+# Logs
+logs/

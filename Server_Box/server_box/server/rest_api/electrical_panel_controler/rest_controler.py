@@ -28,6 +28,8 @@ class RelaysStatusApi(MethodView):
     def get(self):
         """Get relays status"""
 
+        logger.info(f"GET electrical_panel/")
+
         # Call electrical panel manager service to get relays status
         relays_status = electrical_panel_manager_service.get_relays_last_received_status()
 
@@ -38,6 +40,9 @@ class RelaysStatusApi(MethodView):
     @bp.response(status_code=200, schema=RelaysStatusResponseSchema)
     def post(self, args: RelaysStatusQuerySchema):
         """Set relays status"""
+
+        logger.info(f"POST relays/")
+        logger.info(f"status {args}")
 
         # Build RelayStatus instance
         statuses_from_query = []

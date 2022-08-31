@@ -30,7 +30,7 @@ class Orchestrator:
     def init_app(self, app: Flask) -> None:
         """Initialize Orchestrator"""
         if app is not None:
-            logger.debug("initializing Orchestrator")
+            logger.info("initializing Orchestrator")
             # Initialize configuration
             self.wifi_status_polling_period_in_secs = app.config[
                 "WIFI_STATUS_POLLING_PERIOD_IN_SECS"

@@ -10,37 +10,132 @@ handlers:
     class: logging.StreamHandler
     formatter: default
 
+  app:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/app.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  orchestrator:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/orchestrator.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  api_rest:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/api-rest.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  manager_camera:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/camera.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  manager_electrical_panel:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/electrical_panel.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  manager_thread:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/thread.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  manager_wifi_bands:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/wifi_bands.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  interface_mqtt:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/interface/mqtt.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  interface_thread:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/interface/thread.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
+  interface_telnet:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/interface/telnet.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
 root:
   level: WARN
-  handlers: [console]
+  handlers: [app]
 
 loggers:
   server.app:
-    level: DEBUG
-    handlers: [console]
+    level: INFO
+    handlers: [app]
     propagate: no
+
+  server.rest_api:
+      level: INFO
+      handlers: [api_rest]
+      propagate: no
 
   server.orchestrator:
-    level: DEBUG
-    handlers: [console]
+    level: INFO
+    handlers: [orchestrator]
     propagate: no
 
-  server.interfaces:
-      level: DEBUG
-      handlers: [console]
-      propagate: no
+  server.managers.camera_manager:
+    level: INFO
+    handlers: [manager_camera]
+    propagate: no
 
-  server.managers:
-      level: DEBUG
-      handlers: [console]
-      propagate: no
+  server.managers.electrical_panel_manager:
+    level: INFO
+    handlers: [manager_camera]
+    propagate: no
 
-  server.rest_api:
-      level: DEBUG
-      handlers: [console]
-      propagate: no
+  server.managers.electrical_panel_manager:
+    level: INFO
+    handlers: [manager_electrical_panel]
+    propagate: no
 
-  server.rest_api:
-      level: DEBUG # Must be set to INFO to be active
-      handlers: [console]
-      propagate: no
+  server.managers.thread_manager:
+    level: INFO
+    handlers: [manager_thread]
+    propagate: no
+
+  server.managers.wifi_bands_manager:
+    level: INFO
+    handlers: [manager_wifi_bands]
+    propagate: no
+
+  server.interfaces.thread_interface:
+    level: INFO
+    handlers: [interface_thread]
+    propagate: no
+
+  server.interfaces.mqtt_interface:
+    level: INFO
+    handlers: [interface_mqtt]
+    propagate: no
+
+  server.interfaces.wifi_interface:
+    level: INFO
+    handlers: [interface_telnet]
+    propagate: no

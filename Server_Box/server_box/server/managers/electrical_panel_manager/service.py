@@ -36,7 +36,7 @@ class ElectricalPanelManager:
     def init_app(self, app: Flask) -> None:
         """Initialize ElectricalPanelManager"""
         if app is not None:
-            logger.debug("initializing the ElectricalPanelManager")
+            logger.info("initializing the ElectricalPanelManager")
             # Initialize configuration
             self.mqtt_broker_address = app.config["MQTT_BROKER_ADDRESS"]
             self.mqtt_username = app.config["MQTT_USERNAME"]
@@ -72,7 +72,7 @@ class ElectricalPanelManager:
 
     def receive_relays_statuses(self, relays_status: RelaysStatus):
         """Callback for relays/status topic"""
-        logger.debug(f"Relays status received")
+        logger.info(f"Relays status received")
 
         # Update relays last status received
         relays_status.timestamp = datetime.now()
@@ -81,7 +81,7 @@ class ElectricalPanelManager:
     def publish_mqtt_relays_status_command(self, relays_status: RelaysStatus):
         """publish MQTT relays status command"""
 
-        logger.debug(f"Publishin relays status command")
+        logger.debug(f"Publishing relays status command")
         self.mqtt_client.publish(self.mqtt_command_relays_topic, relays_status)
 
     def init_mqtt_service(self):

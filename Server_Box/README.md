@@ -326,9 +326,35 @@ export FLASK_APP="server_box/server/app:create_app()"
 export FLASK_ENV=development
 ```
 
+Create logfiles
+
+Log files defined in configuration file located in *server_box/server/config/logging-config.yml* must be created before launching the application
+
+```bash
+mkdir logs
+mkdir logs/manager
+mkdir logs/interface
+touch logs/app.log logs/orchestrator.log logs/api-rest.log
+touch logs/manager/camera.log logs/manager/electrical_panel.log logs/manager/thread.log logs/manager/wifi_bands.log
+touch logs/interface/mqtt.log logs/interface/thread.log logs/interface/telnet.log
+```
+
 Pour lancer l'application flask, depuis Server_Box
 ```bash
 flask run
+```
+## **Set the rpi-box application as a service**
+
+Copy the service file
+```bash
+sudo cp server_box/service/rpi-box.service /etc/systemd/system/
+```
+
+Register service
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable rpi-box
+sudo systemctl restart rpi-box
 ```
 
 ## **Disable Bluethoot and Wifi interfaces**

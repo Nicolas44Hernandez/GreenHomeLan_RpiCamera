@@ -51,7 +51,7 @@ class Telnet:
             logger.error("Telnet connection creation failed")
             raise ServerBoxException(ErrorCode.TELNET_CONNECTION_ERROR)
 
-        logger.debug(f"Telnet connection established with host: %s", self.host)
+        logger.info(f"Telnet connection established with host: %s", self.host)
         return tn_connection
 
     def create_super_user_session(self):
@@ -67,7 +67,7 @@ class Telnet:
             raise ServerBoxException(ErrorCode.TELNET_CONNECTION_ERROR)
 
         self.super_user_session = True
-        logger.debug("Super user session created")
+        logger.debu("Super user session created")
 
     def close(self):
         try:
