@@ -42,6 +42,10 @@ class Orchestrator:
             # Run notification module
             self.init_notification_module()
 
+    def init_notification_module(self):
+        """Initialize the notification callbacks for the orchestrator"""
+        thread_manager_service.set_msg_reception_callback(self.thread_msg_reception_callback)
+
     def send_relays_command(self, bands_status: Iterable[WifiBandStatus]):
         """Send MQTT command to electrical pannel to represent the wifi bands status"""
 
@@ -92,11 +96,24 @@ class Orchestrator:
 
     def thread_msg_reception_callback(self, msg: str):
         """Callback for thread notification message reception"""
+
+        # TODO: add message format (BSON)
         logger.info(f"Thread received message: {msg}")
 
-    def init_notification_module(self):
-        """Initialize the notification callbacks for the orchestrator"""
-        thread_manager_service.set_msg_reception_callback(self.thread_msg_reception_callback)
+        try:
+            # Parse received message
+            ressource, band, status = msg.split("-")
+
+            # set wifi status
+            if ressource == "wifi":
+                status = status == "on"
+                if band == "all":
+                    wifi_bands_manager_service.set_wifi_status(status=status)
+                else:
+                    wifi_bands_manager_service.set_band_status(band=band, status=status)
+        except:
+            logger.error(f"Error in message received format")
+            return
 
 
 orchestrator_service: Orchestrator = Orchestrator()
