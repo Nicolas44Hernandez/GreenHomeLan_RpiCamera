@@ -2,7 +2,7 @@
 
 ## **1. Installation de l'OS Raspbian sur rapsberry**
 Nous allons installer un OS au raspebrry pi simulant la box. Dans toute la procédure, ce raspberry pi sera nommé rpi_box.
-Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs de l'OS raspbian, il est judicieux de prendre la dernière version Bullseye. 
+Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs de l'OS raspbian, il est judicieux de prendre la dernière version Bullseye.
 - [raspios_lite_Bullseye](https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-04-07/)
 
 
@@ -54,32 +54,32 @@ Une fois connecté en  SSH, il est utile si cela est nécessaire, de changer le 
 sudo nano /etc/default/keyboard
 ```
 
-puis modifier la ligne XKBLAYOUT="gb" par XKBLAYOUT="fr"						
+puis modifier la ligne XKBLAYOUT="gb" par XKBLAYOUT="fr"
 
-Pour arrêter de recevoir des variables d'environnement du client SSH il faut modifier le fichier de configuration ssh: 
+Pour arrêter de recevoir des variables d'environnement du client SSH il faut modifier le fichier de configuration ssh:
 
 ```bash
 sudo nano /etc/ssh/sshd_config
-``` 
+```
 
  Marquer la ligne `AcceptEnv LANG LC_* ` comme commentaire.
 
  ## **3. Configuration de la RPI comme point d'access WiFi**
 
- Cette procédure peut être effectuée de façon [automatique](#configuration-automatique) ou [manuellement](#configuration-manuelle). 
+ Cette procédure peut être effectuée de façon [automatique](#configuration-automatique) ou [manuellement](#configuration-manuelle).
 
  ## **Configuration Automatique**
 
-La configuration RPI automatique est fait via le script  
-`Server_Box/setup/scripts/rpi-server-box-setup.sh` 
+La configuration RPI automatique est fait via le script
+`Server_Box/setup/scripts/rpi-server-box-setup.sh`
 
-Il est necessaire d'ajouter les adresses IP du réseau à configurer dans le fichier de configuration `Server_Box/setup/scripts/rpi-server-box-setup.sh` 
+Il est necessaire d'ajouter les adresses IP du réseau à configurer dans le fichier de configuration `Server_Box/setup/scripts/rpi-server-box-setup.sh`
 
 ```
 RPI_SERVER_BOX_IP=192.168.4.1 -> Adresse IP de la interface wlan0 (WiFi) de la RPI box
 RPI_CAMERA_IP=192.168.4.12 -> Adresse IP de la camera
 RPI_CAMERA_PORT=4000 -> Port de la camera
-``` 
+```
 
 Pour lancer le script de configuration automatique il est nécessaire de copier le répertoire setup via scp dans la RPI_Box, pour cela:
 ```bash
@@ -91,7 +91,7 @@ Se connecter via SSH a la RPI_Box
 ssh <PI_USER>@<RPI_BOX_IP_ETH0>
 ```
 
-lancer le script depuis le répertoire `setup/scripts` 
+lancer le script depuis le répertoire `setup/scripts`
 ```bash
 cd setup/scripts
 chmod +x rpi-server-box-setup.sh
@@ -119,16 +119,16 @@ sudo apt install iptables
 le rpi_box doit être configuré comme point d'accès Wi-Fi. Les commandes pour la configuration sont les suivantes :
 
 ```bash
-sudo apt install hostapd	
+sudo apt install hostapd
 sudo systemctl unmask hostapd
-sudo systemctl enable hostapd		
-``` 
+sudo systemctl enable hostapd
+```
 
 ```bash
-sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent	
+sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
 sudo reboot
 ```
-		
+
 Par la suite, le fichier dhcpcd.conf est configuré pour l'attribution d'une adresse statique
 
 ```bash
@@ -143,7 +143,7 @@ interface wlan0
     nohook wpa_supplicant
 ```
 
-Ensuite, il faut activer le routage	en éditant un nouveau fichier : 
+Ensuite, il faut activer le routage	en éditant un nouveau fichier :
 
 ```bash
 sudo nano /etc/sysctl.d/routed-ap.conf
@@ -152,7 +152,7 @@ sudo nano /etc/sysctl.d/routed-ap.conf
 en copiant/collant cette ligne
 
 ```
-net.ipv4.ip_forward=1				
+net.ipv4.ip_forward=1
 ```
 
 Les 2 commandes suivent la manière dont le routage du traffic HTTP doit être réaliser par le rpi-box en le redirigeant vers vers le rapsberry pi de la camera dont l'adresse est 192.168.4.12 et sur le port 4000. Cette indication est à modifier si l'adresse IP du raspberry camera est différente.
@@ -175,7 +175,7 @@ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 Pour rendre les règles de routage persistente:
 ```bash
 sudo netfilter-persistent save
-```	
+```
 
 
 Ensuite, on configure les services DHCP et DNS par les commandes suivantes :
@@ -185,7 +185,7 @@ sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 sudo nano /etc/dnsmasq.conf
 ```
 
-les 4 lignes ci-dessous sont à copier coller dans le fichier dnsmasq.conf en remplacement de l'existant. On indique ici, la plage des adresses IP de tout éléments venant se connecter sur le point d'acceès rpi_box avec une durée de 300 jours. 
+les 4 lignes ci-dessous sont à copier coller dans le fichier dnsmasq.conf en remplacement de l'existant. On indique ici, la plage des adresses IP de tout éléments venant se connecter sur le point d'acceès rpi_box avec une durée de 300 jours.
 
 ```
 interface=wlan0
@@ -194,14 +194,14 @@ domain=wlan
 address=/gw.wlan/192.168.4.1
 ```
 
-Pour finaliser la configuration du point d'accès, on configure les paramètres réseau en proposant un nom de réseau et un mot de passe		
+Pour finaliser la configuration du point d'accès, on configure les paramètres réseau en proposant un nom de réseau et un mot de passe
 
 ```bash
 sudo nano /etc/hostapd/hostapd.conf
 ```
 
-puis copier coller les lignes ci-dessous. 
-```    
+puis copier coller les lignes ci-dessous.
+```
 interface=wlan0
 driver=nl80211
 ssid=rpibox
@@ -229,7 +229,7 @@ sudo nano /etc/default/hostapd
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 ```
 
-Le rpi_box aura donc une adresse ip fixe wifi dont l'adresse est : 192.168.4.1 en plus de son adresse Ethernet. On peut le vérifier par la commande: 
+Le rpi_box aura donc une adresse ip fixe wifi dont l'adresse est : 192.168.4.1 en plus de son adresse Ethernet. On peut le vérifier par la commande:
 
 ```bash
 sudo ifconfig
@@ -242,7 +242,7 @@ On valide le tout par le redémarrage du rpi-box
 sudo reboot now
 ```
 
-Le point d'accès de la rpi_box sera maintenant visible par `rpibox` avec comme mot de passe `greenhomelan` 
+Le point d'accès de la rpi_box sera maintenant visible par `rpibox` avec comme mot de passe `greenhomelan`
 (un autre mot de passe est possible du moment qu'il est renseigné dans le fichier hostapd.conf)
 
 ## **4. Installation du serveur Nodejs**
@@ -259,7 +259,7 @@ npm init (valider chaque lignes)
 
 
 
- Puis installation des toutes les dépendances : 
+ Puis installation des toutes les dépendances :
 
 ```bash
 npm i express
@@ -278,13 +278,13 @@ MSERV_ADR : {
         "e4:5f:01:0e:31:ed" : "http://172.16.57.127:8000"
     }
 ```
-L'obejt MSERV_ADR prend comme clé l'adresse mac du rpi-cloud et la valeur l'adresse IP du cloud. Cela signifie que le rpi-cloud doit être entièrement configuré er fonctionnel pour récuéprer ces informations par l'intermédiaire de la commande suivante : 
+L'obejt MSERV_ADR prend comme clé l'adresse mac du rpi-cloud et la valeur l'adresse IP du cloud. Cela signifie que le rpi-cloud doit être entièrement configuré er fonctionnel pour récuéprer ces informations par l'intermédiaire de la commande suivante :
 
 ```bash
 sudo arp -a
 ```
 
-Le serveur est ensuite prêt à être lancé : 
+Le serveur est ensuite prêt à être lancé :
 
 ```bash
 node server_box.js
@@ -329,4 +329,15 @@ export FLASK_ENV=development
 Pour lancer l'application flask, depuis Server_Box
 ```bash
 flask run
+```
+
+## **Disable Bluethoot and Wifi interfaces**
+```bash
+sudo nano /boot/config.txt
+```
+
+Find the section *[all]* and add the following lines
+```bash
+dtoverlay=disable-wifi
+dtoverlay=disable-bt
 ```
