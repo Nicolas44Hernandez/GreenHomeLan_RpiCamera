@@ -29,7 +29,7 @@ class ThreadBoarderRouter(threading.Thread):
     """Service class for thread network setup management"""
 
     sudo_password: str
-    thread_network_setup = {}
+    thread_network_setup: dict = {}
     nodes = Iterable[ThreadNode]
     running: bool
     msg_callback: callable
@@ -88,20 +88,26 @@ class ThreadBoarderRouter(threading.Thread):
 
         # Thread network initialisation (ot-cli)
         for command in configuration["THREAD"]["NETWORK_SETUP_COMMANDS"]:
-            # run command
-            cmd = command.split()
-            # TODO: try exception
-            cmd1 = subprocess.Popen(["echo", self.sudo_password], stdout=subprocess.PIPE)
-            cmd2 = subprocess.Popen(["sudo", "-S"] + cmd, stdin=cmd1.stdout, stdout=subprocess.PIPE)
-            if "ipaddr" in command:
-                output = cmd2.stdout.read().decode()
-                out = output.split("\r\n")[:-2]
-                self.thread_network_setup["ip6v_otbr"] = out[3]
-                self.thread_network_setup["ip6v_mesh"] = out[-1]
-            elif "dataset active -x" in command:
-                output = cmd2.stdout.read().decode()
-                out = output.split("\r\n")
-                self.thread_network_setup["dataset"] = out[0]
+            try:
+                # run command
+                cmd = command.split()
+                cmd1 = subprocess.Popen(["echo", self.sudo_password], stdout=subprocess.PIPE)
+                cmd2 = subprocess.Popen(
+                    ["sudo", "-S"] + cmd, stdin=cmd1.stdout, stdout=subprocess.PIPE
+                )
+                if "ipaddr" in command:
+                    output = cmd2.stdout.read().decode()
+                    out = output.split("\r\n")[:-2]
+                    self.thread_network_setup["ip6v_otbr"] = out[3]
+                    self.thread_network_setup["ip6v_mesh"] = out[-1]
+                elif "dataset active -x" in command:
+                    output = cmd2.stdout.read().decode()
+                    out = output.split("\r\n")
+                    self.thread_network_setup["dataset"] = out[0]
+            except:
+                logger.error("Thread network setup error")
+                raise ServerBoxException(ErrorCode.THREAD_NETWORK_SETUP_ERROR)
+
         logger.info(f"Thread network config: {self.thread_network_setup}")
 
     def getNodes(self) -> Iterable[ThreadNode]:

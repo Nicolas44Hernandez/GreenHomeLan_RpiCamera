@@ -343,6 +343,52 @@ Pour lancer l'application flask, depuis Server_Box
 ```bash
 flask run
 ```
+
+## **Open Thread setup**
+The complete installation and network setup procedure can be found [here](https://espace.agir.orange.com/display/HOMEINAI/How+to+set+up+OpenThread+Network)
+
+First, you need to retrieve Git Project:
+
+```bash
+git clone https://github.com/openthread/ot-br-posix.git --depth 1
+```
+Then you need to execute a scripts to bootstrap the Thread Border Router (not with sudo):
+
+```bash
+cd ot-br-posix
+./script/bootstrap
+```
+You will need to also retrieve infrastructure network interface (e.g. Wi-Fi/Ethernet) to specified it in a script to start Thread Border Router:
+
+Use this command to determine correct interface
+```bash
+ip addr
+```
+
+Execute script
+```bash
+INFRA_IF_NAME=<interface> ./script/setup
+#Examples Below
+#INFRA_IF_NAME=eth0 ./script/setup
+#INFRA_IF_NAME=wlan0 ./script/setup
+```
+
+Note: If your Raspberry Pi is connected by an Ethernet cable, specify the Ethernet interface name (e.g. eth0)
+
+You can verify the installation  by verifying otbr-agent status:
+
+```bash
+sudo service otbr-agent status
+```
+Note: otbr-agent service is not active, because it requires an RCP chip to run.
+
+Connect nRF52840-dongle to your Raspberry Pi/NUC (the one flashed with ot-rcp.hex), restart otbr-agent service and recheck status to observe everything is now working fine:
+
+```bash
+sudo service otbr-agent restart
+sudo service otbr-agent status
+```
+
 ## **Set the rpi-box application as a service**
 
 Copy the service file

@@ -1,9 +1,8 @@
 [Unit]
 Description=RPI Box
-After=network.target
+After=network.target otbr-agent
 
 [Service]
-User=pi
 WorkingDirectory=/home/nico/GreenHomeLan_Camera/Server_Box
 Environment=FLASK_CONFIG=production
 Environment=FLASK_APP="server_box/server/app:create_app()"
