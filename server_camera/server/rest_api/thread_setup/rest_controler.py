@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from .rest_model import ThreadNetworkSetupSchema
 
-# from server.managers.thread_manager import thread_manager_service
+from server.managers.thread_manager import thread_manager_service
 from server.common import ServerCameraException, ErrorCode
 
 logger = logging.getLogger(__name__)
@@ -34,11 +34,15 @@ class SetupThreadNetworkAllNodes(MethodView):
 
     @bp.doc(responses={400: "BAD_REQUEST"})
     @bp.arguments(ThreadNetworkSetupSchema, location="query")
-    @bp.response(status_code=200, schema=ThreadNetworkSetupSchema)
     def post(self, args: ThreadNetworkSetupSchema):
         """
         Set Thread network configuration in the node
         """
         logger.info(f"POST thread/setup")
 
+        thread_manager_service.join_thread_network(
+            host_ipv6_addr=args["host_ipv6_addr"],
+            host_ipv6_mesh=args["host_ipv6_mesh"],
+            dataset_key=args["dataset_key"],
+        )
         # TODO: Call service

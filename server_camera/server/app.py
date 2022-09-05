@@ -3,12 +3,9 @@
 import logging
 from logging.config import dictConfig
 from os import path
-
 import yaml
 from flask import Flask
-
-# from .managers.wifi_bands_manager import wifi_bands_manager_service
-# from .rest_api.wifi_controler import bp as wifi_controler_bp
+from .managers.thread_manager import thread_manager_service
 from .rest_api.thread_setup import bp as thread_controler_bp
 from .extension import api
 from .common import ServerCameraException, handle_server_camera_exception
@@ -72,8 +69,8 @@ def register_extensions(app: Flask):
         },
     )
 
-    # Wifi bands manager extension
-    # wifi_bands_manager_service.init_app(app=app)
+    # Thread manager extension
+    thread_manager_service.init_app(app=app)
 
 
 def register_blueprints(app: Flask):

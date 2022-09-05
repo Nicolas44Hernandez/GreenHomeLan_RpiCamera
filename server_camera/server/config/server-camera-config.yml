@@ -8,3 +8,8 @@ OPENAPI_URL_PREFIX: /
 # Enable swagger UI
 OPENAPI_SWAGGER_UI_PATH: /docs
 OPENAPI_SWAGGER_UI_URL: https://cdn.jsdelivr.net/npm/swagger-ui-dist/
+
+# Thread configuration
+THREAD_SERIAL_INTERFACE: /dev/ttyACM0
+THREAD_SERIAL_SPEED: 115200
+THREAD_UDP_PORT: 45
