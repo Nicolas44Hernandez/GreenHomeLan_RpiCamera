@@ -1,0 +1,1 @@
+"""Server camera application package"""
