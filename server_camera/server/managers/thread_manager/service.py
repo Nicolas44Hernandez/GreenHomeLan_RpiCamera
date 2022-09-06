@@ -49,6 +49,9 @@ class ThreadManager:
     def send_thread_message_to_border_router(self, message: str):
         """Send message to border router"""
 
+        if self.thread_interface is None:
+            raise ServerCameraException(ErrorCode.THREAD_NODE_NOT_CONFIGURED)
+
         self.thread_interface.send_message_to_border_router(message)
 
 

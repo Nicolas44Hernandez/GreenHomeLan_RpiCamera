@@ -8,6 +8,7 @@ class ErrorCode(Enum):
 
     # Please enrich this enumeration in order to handle other kind of errors
     UNEXPECTED_ERROR = (0, 500, "Unexpected error occurs")
+    THREAD_NODE_NOT_CONFIGURED = (1, 400, "Thread node hasnt been configured yet")
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):
