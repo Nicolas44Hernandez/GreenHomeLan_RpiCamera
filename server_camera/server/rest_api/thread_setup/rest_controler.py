@@ -29,11 +29,11 @@ class ThreadNodesApi(MethodView):
 
 
 @bp.route("/setup")
-class SetupThreadNetworkAllNodes(MethodView):
+class SetupThreadNetworkNode(MethodView):
     """API to receive the Thread network configuration"""
 
     @bp.doc(responses={400: "BAD_REQUEST"})
-    @bp.arguments(ThreadNetworkSetupSchema, location="query")
+    @bp.arguments(ThreadNetworkSetupSchema, location="json")
     def post(self, args: ThreadNetworkSetupSchema):
         """
         Set Thread network configuration in the node
@@ -41,8 +41,8 @@ class SetupThreadNetworkAllNodes(MethodView):
         logger.info(f"POST thread/setup")
 
         thread_manager_service.join_thread_network(
-            host_ipv6_addr=args["host_ipv6_addr"],
-            host_ipv6_mesh=args["host_ipv6_mesh"],
+            ipv6_otbr=args["ipv6_otbr"],
+            ipv6_mesh=args["ipv6_mesh"],
             dataset_key=args["dataset_key"],
         )
-        # TODO: Call service
+        return "Thread setup OK"
