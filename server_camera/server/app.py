@@ -6,6 +6,7 @@ from os import path
 import yaml
 from flask import Flask
 from .managers.thread_manager import thread_manager_service
+from .managers.doorbell_manager import doorbell_manager_service
 from .rest_api.thread_setup import bp as thread_controler_bp
 from .extension import api
 from .common import ServerCameraException, handle_server_camera_exception
@@ -71,6 +72,8 @@ def register_extensions(app: Flask):
 
     # Thread manager extension
     thread_manager_service.init_app(app=app)
+    # Doorbell manager extension
+    doorbell_manager_service.init_app(app=app)
 
 
 def register_blueprints(app: Flask):

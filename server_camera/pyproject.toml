@@ -10,6 +10,7 @@ Flask = "2.0.1"
 flask-smorest = "^0.34.0"
 PyYAML = "^5.4.1"
 pyserial = "^3.5"
+"RPi.GPIO" = "^0.7.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"

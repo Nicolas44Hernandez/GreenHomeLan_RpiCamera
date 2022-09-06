@@ -13,3 +13,6 @@ OPENAPI_SWAGGER_UI_URL: https://cdn.jsdelivr.net/npm/swagger-ui-dist/
 THREAD_SERIAL_INTERFACE: /dev/ttyACM0
 THREAD_SERIAL_SPEED: 115200
 THREAD_UDP_PORT: 45
+
+# Peripherals configuration
+PERIPHERALS_DOORBELL_BUTTON: 21

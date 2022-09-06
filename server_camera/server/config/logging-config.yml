@@ -59,7 +59,17 @@ loggers:
     handlers: [console]
     propagate: no
 
+  server.managers.doorbell_manager:
+    level: INFO
+    handlers: [console]
+    propagate: no
+
   server.interfaces.thread_interface:
+    level: INFO
+    handlers: [console]
+    propagate: no
+
+  server.interfaces.gpio_interface:
     level: INFO
     handlers: [console]
     propagate: no
