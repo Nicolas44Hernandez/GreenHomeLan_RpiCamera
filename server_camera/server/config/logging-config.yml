@@ -64,6 +64,11 @@ loggers:
     handlers: [console]
     propagate: no
 
+  server.managers.wifi_connection_manager:
+    level: INFO
+    handlers: [console]
+    propagate: no
+
   server.interfaces.thread_interface:
     level: INFO
     handlers: [console]
