@@ -1,0 +1,14 @@
+WIFI:
+  ALL:
+    ON: wifi-all-on
+    OFF: wifi-all-off
+  BANDS:
+    2.4GHz:
+      ON: wifi-2.4GHz-on
+      OFF: wifi-2.4GHz-off
+    5GHz:
+      ON: wifi-5GHz-on
+      OFF: wifi-5GHz-off
+    6GHz:
+      ON: wifi-6GHz-on
+      OFF: wifi-6GHz-off

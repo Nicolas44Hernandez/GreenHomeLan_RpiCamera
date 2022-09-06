@@ -9,6 +9,11 @@ class ErrorCode(Enum):
     # Please enrich this enumeration in order to handle other kind of errors
     UNEXPECTED_ERROR = (0, 500, "Unexpected error occurs")
     THREAD_NODE_NOT_CONFIGURED = (1, 400, "Thread node hasnt been configured yet")
+    WIFI_THREAD_COMMANDS_FILE_ERROR = (
+        2,
+        500,
+        "Error in wifi thread commands load, check commands file",
+    )
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):
