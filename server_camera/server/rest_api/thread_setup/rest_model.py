@@ -10,3 +10,9 @@ class ThreadNetworkSetupSchema(Schema):
     ipv6_otbr = Str(required=True, allow_none=False)
     ipv6_mesh = Str(required=True, allow_none=False)
     dataset_key = Str(required=True, allow_none=False)
+
+
+class ThreadMessageSchema(Schema):
+    """REST ressource for Thread message"""
+
+    message = Str(required=True, allow_none=False)

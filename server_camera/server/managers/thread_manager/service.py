@@ -46,6 +46,11 @@ class ThreadManager:
             thread_udp_port=self.thread_udp_port,
         )
 
+    def send_thread_message_to_border_router(self, message: str):
+        """Send message to border router"""
+
+        self.thread_interface.send_message_to_border_router(message)
+
 
 thread_manager_service: ThreadManager = ThreadManager()
 """ Thread manager service singleton"""

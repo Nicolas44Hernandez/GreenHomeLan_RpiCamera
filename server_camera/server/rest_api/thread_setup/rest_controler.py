@@ -2,7 +2,7 @@
 import logging
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from .rest_model import ThreadNetworkSetupSchema
+from .rest_model import ThreadNetworkSetupSchema, ThreadMessageSchema
 
 from server.managers.thread_manager import thread_manager_service
 from server.common import ServerCameraException, ErrorCode
@@ -46,3 +46,19 @@ class SetupThreadNetworkNode(MethodView):
             dataset_key=args["dataset_key"],
         )
         return "Thread setup OK"
+
+
+@bp.route("/setup/message")
+class SetupThreadNetworkNode(MethodView):
+    """API to receive the Thread network configuration"""
+
+    @bp.doc(responses={400: "BAD_REQUEST"})
+    @bp.arguments(ThreadMessageSchema, location="query")
+    def post(self, args: ThreadMessageSchema):
+        """
+        Set Thread network configuration in the node
+        """
+        logger.info(f"POST thread/setup/message")
+
+        thread_manager_service.send_thread_message_to_border_router(args["message"])
+        return "Message sent"

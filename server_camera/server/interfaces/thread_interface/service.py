@@ -88,3 +88,9 @@ class ThreadNode:
 
         logger.info(f"Command: {command.strip()}")
         logger.info(f"Response: {response}")
+
+    def send_message_to_border_router(self, message: str):
+        """Send thread message to Border router"""
+
+        message = "udp send " + message
+        self.send_serial_command(message)
