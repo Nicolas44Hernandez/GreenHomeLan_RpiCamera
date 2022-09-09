@@ -10,6 +10,7 @@ from .managers.doorbell_manager import doorbell_manager_service
 from .managers.wifi_connection_manager import wifi_connection_manager_service
 from .managers.video_manager import video_manager_service
 from .rest_api.thread_setup import bp as thread_controler_bp
+from .rest_api.video_manager import bp as video_manager_controler_bp
 from .extension import api
 from .common import ServerCameraException, handle_server_camera_exception
 
@@ -88,3 +89,4 @@ def register_blueprints(app: Flask):
     app.register_error_handler(ServerCameraException, handle_server_camera_exception)
     # Register REST blueprints
     api.register_blueprint(thread_controler_bp)
+    api.register_blueprint(video_manager_controler_bp)

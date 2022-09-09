@@ -16,7 +16,6 @@ class VideoManager:
 
     # attributes
     video_capture_interface: VideoCaptureInterface
-    counter: int
 
     def __init__(self, app: Flask = None) -> None:
         if app is not None:
@@ -26,20 +25,16 @@ class VideoManager:
         """Initialize VideoManager"""
         if app is not None:
             logger.info("initializing the VideoManager")
+            self.stream_duration_in_secs = app.config["VIDEO_STREAM_DURATION_IN_SECS"]
             self.video_capture_interface = VideoCaptureInterface()
-            self.capture_running = True
 
-    def set_video_capture_running_status(self, running: bool):
-        """Set the video capture status (runnning / waiting)"""
+    def get_video_stream(self):
+        """Get camera video stream"""
 
-        logger.info(f"Setting video capture running to {running}")
-        self.video_capture_interface.running = running
+        return self.video_capture_interface.get_video_stream(
+            duration_in_secs=self.stream_duration_in_secs
+        )
 
-
-    def get_last_captured_frame(self):
-        """Retreive last captured frame"""
-
-        return self.video_capture_interface.get_last_frame()
 
 video_manager_service: VideoManager = VideoManager()
 """ VideoManager  service singleton"""

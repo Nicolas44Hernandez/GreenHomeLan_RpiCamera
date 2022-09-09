@@ -4,12 +4,11 @@ Video capture interface service
 import logging
 import threading
 import cv2
-import queue
+from datetime import datetime, timedelta
+from flask import Response
 
 
 logger = logging.getLogger(__name__)
-# TODO: get from stream
-FPS = 10
 
 
 class VideoCaptureInterface(threading.Thread):
@@ -17,40 +16,30 @@ class VideoCaptureInterface(threading.Thread):
 
     fps: int
     capture: cv2.VideoCapture
-    running: bool
-    last_frame: queue.Queue
 
     def __init__(self):
         self.capture = cv2.VideoCapture(0)
-        self.last_frame = queue.Queue()
-        self.running = True
         logger.info("Video manager interface started")
 
-        self.reader_thread = threading.Thread(target=self.read_forever)
-        self.reader_thread.daemon = True
-        self.reader_thread.start()
+    def gen_frames(self, duration_in_secs: int):
+        logger.info("Streaming...")
+        estimated_end = datetime.now() + timedelta(seconds=duration_in_secs)
+        now = datetime.now()
+        while now < estimated_end:
+            success, frame = self.capture.read()  # read the camera frame
+            if not success:
+                logger.info("Error in video capture")
+                # TODO: raise exception
+            else:
+                ret, buffer = cv2.imencode(".jpg", frame)
+                frame = buffer.tobytes()
+                yield (
+                    b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
+                )  # concat frame one by one and show result
+            now = datetime.now()
+        logger.info("Stream finished")
 
-    def read_forever(self):
-        """Read frames as soon as they are available, keeping only most recent one"""
-
-        while True:
-            if self.running:
-                ret, frame = self.capture.read()
-                if not ret:
-                    break
-                if not self.last_frame.empty():
-                    try:
-                        # Discard previous frame
-                        self.last_frame.get_nowait()
-                    except queue.Empty:
-                        pass
-                self.last_frame.put(frame)
-        # TODO: Raise exception if Error ?
-
-    def get_last_frame(self):
-        """Retrieve last captured frame"""
-        try:
-            frame = self.last_frame.get_nowait()
-        except queue.Empty:
-            return None
-        return frame
+    def get_video_stream(self, duration_in_secs: int):
+        return Response(
+            self.gen_frames(duration_in_secs), mimetype="multipart/x-mixed-replace; boundary=frame"
+        )

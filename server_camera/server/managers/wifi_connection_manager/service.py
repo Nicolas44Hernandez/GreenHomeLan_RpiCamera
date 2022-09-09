@@ -48,7 +48,6 @@ class WifiConnectionManager:
             except OSError:
                 self.connected = False
             _socket.close()
-            logger.info(f"Wifi interface status: {self.connected}")
 
         wifi_connection_status_timeloop.start(block=False)
 
