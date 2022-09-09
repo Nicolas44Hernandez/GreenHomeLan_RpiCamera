@@ -54,6 +54,11 @@ class ThreadManager:
 
         self.thread_interface.send_message_to_border_router(message)
 
+    def get_thread_network_setup(self):
+        """Retrieve thread network config"""
+
+        return self.thread_interface
+
 
 thread_manager_service: ThreadManager = ThreadManager()
 """ Thread manager service singleton"""
