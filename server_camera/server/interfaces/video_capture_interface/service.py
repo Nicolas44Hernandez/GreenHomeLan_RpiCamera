@@ -6,7 +6,10 @@ import threading
 import cv2
 from datetime import datetime, timedelta
 from flask import Response
+from server.common import ServerCameraException, ErrorCode
 
+
+PICTURE_RATIO = 4
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +31,16 @@ class VideoCaptureInterface(threading.Thread):
         while now < estimated_end:
             success, frame = self.capture.read()  # read the camera frame
             if not success:
-                logger.info("Error in video capture")
-                # TODO: raise exception
+                logger.error("Error in video capture")
+                raise ServerCameraException(ErrorCode.VIDEO_CAPTURE_ERROR)
             else:
+                frame = cv2.resize(
+                    frame, None, fx=PICTURE_RATIO, fy=PICTURE_RATIO, interpolation=cv2.INTER_AREA
+                )
                 ret, buffer = cv2.imencode(".jpg", frame)
+                if not ret:
+                    logger.error("Error in image encode")
+                    raise ServerCameraException(ErrorCode.VIDEO_CAPTURE_ENCODE_ERROR)
                 frame = buffer.tobytes()
                 yield (
                     b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"

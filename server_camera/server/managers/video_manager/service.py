@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 class VideoManager:
     """Service class for video manager"""
 
-    # attributes
     video_capture_interface: VideoCaptureInterface
 
     def __init__(self, app: Flask = None) -> None:

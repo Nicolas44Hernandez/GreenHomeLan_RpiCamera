@@ -11,6 +11,7 @@ from .managers.wifi_connection_manager import wifi_connection_manager_service
 from .managers.video_manager import video_manager_service
 from .rest_api.thread_setup import bp as thread_controler_bp
 from .rest_api.video_manager import bp as video_manager_controler_bp
+from .rest_api.wifi_connection import bp as wifi_connection_manager_controler_bp
 from .extension import api
 from .common import ServerCameraException, handle_server_camera_exception
 
@@ -90,3 +91,4 @@ def register_blueprints(app: Flask):
     # Register REST blueprints
     api.register_blueprint(thread_controler_bp)
     api.register_blueprint(video_manager_controler_bp)
+    api.register_blueprint(wifi_connection_manager_controler_bp)
