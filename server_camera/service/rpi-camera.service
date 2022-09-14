@@ -1,0 +1,13 @@
+[Unit]
+Description=RPI Camera
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/workspace/GreenHomeLan_RpiCamera
+Environment=FLASK_CONFIG=production
+Environment=FLASK_APP="server_camera/server/app:create_app()"
+ExecStart=flask run --host '0.0.0.0'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
