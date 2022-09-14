@@ -14,8 +14,6 @@ class ErrorCode(Enum):
         500,
         "Error in wifi thread commands load, check commands file",
     )
-    VIDEO_CAPTURE_ERROR = (3, 500, "Error in video capture")
-    VIDEO_CAPTURE_ENCODE_ERROR = (4, 500, "Error in video capture encode")
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):
