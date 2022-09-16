@@ -13,7 +13,7 @@ bp = Blueprint("thread", __name__, url_prefix="/thread")
 """ The api blueprint. Should be registered in app main api object """
 
 
-@bp.route("/setup")
+@bp.route("/")
 class ThreadNodesApi(MethodView):
     """API to retrieve node current thread configuration"""
 

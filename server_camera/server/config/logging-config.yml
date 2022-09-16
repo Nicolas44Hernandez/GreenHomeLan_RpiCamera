@@ -52,6 +52,13 @@ handlers:
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 9
 
+  ip_discovery_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/ip_discovery.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 9
+
   gpio_interface:
     class: logging.handlers.RotatingFileHandler
     formatter: default
@@ -106,6 +113,11 @@ loggers:
   server.managers.video_manager:
     level: INFO
     handlers: [video_manager]
+    propagate: no
+
+  server.managers.ip_discovery:
+    level: INFO
+    handlers: [ip_discovery_manager]
     propagate: no
 
   server.interfaces.thread_interface:

@@ -29,7 +29,6 @@ def create_app(
     # Get configuration files
     app_config = path.join(config_dir, "server-camera-config.yml")
 
-    # TODO: logging config
     logging_config = path.join(config_dir, "logging-config.yml")
 
     # Load logging configuration and configure flask application logger
