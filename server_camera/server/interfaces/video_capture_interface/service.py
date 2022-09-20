@@ -6,7 +6,7 @@ import threading
 import cv2
 from datetime import datetime, timedelta
 from flask import Response
-from server.common import ServerCameraException, ErrorCode
+from server.managers.doorbell_manager import doorbell_manager_service
 
 
 PICTURE_RATIO = 1
@@ -46,6 +46,9 @@ class VideoCaptureInterface(threading.Thread):
                     b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
                 )  # concat frame one by one and show result
             now = datetime.now()
+
+        # Notify cloud server to video stream is finished
+        doorbell_manager_service.notify_video_stream_ready_to_rpi_cloud(stream_ready=False)
         logger.info("Stream finished")
 
     def get_video_stream(self, duration_in_secs: int):
