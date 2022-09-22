@@ -6,10 +6,10 @@ import threading
 import cv2
 from datetime import datetime, timedelta
 from flask import Response
-from server.managers.doorbell_manager import doorbell_manager_service
+from server.notification.cloud_notifier import cloud_notifier_service
 
 
-PICTURE_RATIO = 1
+PICTURE_RATIO = 0.8
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ class VideoCaptureInterface(threading.Thread):
             now = datetime.now()
 
         # Notify cloud server to video stream is finished
-        doorbell_manager_service.notify_video_stream_ready_to_rpi_cloud(stream_ready=False)
+        cloud_notifier_service.notify_video_stream_ready(stream_ready=False)
         logger.info("Stream finished")
 
     def get_video_stream(self, duration_in_secs: int):

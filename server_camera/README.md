@@ -15,9 +15,11 @@ Log files defined in configuration file located in *server_box/server/config/log
 mkdir logs
 mkdir logs/manager
 mkdir logs/interface
+mkdir logs/notification
 touch logs/app.log logs/api-rest.log
 touch logs/manager/thread.log logs/manager/doorbell.log logs/manager/video.log logs/manager/wifi_connection.log logs/manager/ip_discovery.log
 touch logs/interface/gpio.log logs/interface/thread.log logs/interface/video_capture.log
+touch logs/notification/cloud_notifier.log
 ```
 
 

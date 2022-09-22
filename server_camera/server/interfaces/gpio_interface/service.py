@@ -2,26 +2,46 @@
 GPIO interface service
 """
 import logging
-from gpiozero import Button
+from gpiozero import Button, MotionSensor
 
 logger = logging.getLogger(__name__)
 
 
-class GpioInterface:
-    """Service class for RPI GPIO"""
+class GpioButtonInterface:
+    """Service class for RPI Button GPIO"""
 
-    doorbell_button_pin: int
-    doorbell_button: Button
+    button_pin: int
+    button: Button
     callback_function: callable
 
-    def __init__(self, doorbell_button_pin: int, callback_function: callable):
+    def __init__(self, button_pin: int, callback_function: callable):
 
-        logger.info(f"Creating RPI GPIO interface:")
-        logger.info(f"doorbell_button_pin: {doorbell_button_pin}")
+        logger.info(f"Creating RPI GPIO Button interface:")
+        logger.info(f"button_pin: {button_pin}")
         logger.info(f"callback_function: {callback_function}")
 
-        self.doorbell_button_pin = doorbell_button_pin
+        self.button_pin = button_pin
 
         # setup
-        self.doorbell_button = Button(self.doorbell_button_pin)
-        self.doorbell_button.when_pressed = callback_function
+        self.button = Button(self.button_pin)
+        self.button.when_pressed = callback_function
+
+
+class GpioMotionSensorInterface:
+    """Service class for RPI Button GPIO"""
+
+    sensor_pin: int
+    motion_sensor: MotionSensor
+    callback_function: callable
+
+    def __init__(self, sensor_pin: int, callback_function: callable):
+
+        logger.info(f"Creating RPI GPIO MotionSensor interface:")
+        logger.info(f"button_pin: {sensor_pin}")
+        logger.info(f"callback_function: {callback_function}")
+
+        self.sensor_pin = sensor_pin
+
+        # setup
+        self.motion_sensor = MotionSensor(self.sensor_pin)
+        self.motion_sensor.when_motion = callback_function

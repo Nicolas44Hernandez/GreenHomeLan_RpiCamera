@@ -80,6 +80,13 @@ handlers:
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 1
 
+  cloud_notifier:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/notification/cloud_notifier.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
 root:
   level: WARN
   handlers: [console]
@@ -133,4 +140,9 @@ loggers:
   server.interfaces.video_capture_interface:
     level: INFO
     handlers: [video_capture_interface]
+    propagate: no
+
+  server.notification.cloud_notifier:
+    level: INFO
+    handlers: [cloud_notifier]
     propagate: no
