@@ -38,6 +38,13 @@ handlers:
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 1
 
+  presence_detection_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/presence_detection.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
   video_manager:
     class: logging.handlers.RotatingFileHandler
     formatter: default
@@ -110,6 +117,11 @@ loggers:
   server.managers.doorbell_manager:
     level: INFO
     handlers: [doorbell_manager]
+    propagate: no
+
+  server.managers.presence_detection_manager:
+    level: INFO
+    handlers: [presence_detection_manager]
     propagate: no
 
   server.managers.wifi_connection_manager:

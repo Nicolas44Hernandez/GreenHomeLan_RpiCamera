@@ -20,16 +20,16 @@ class CloudNotifier:
             self.init_app(app)
 
     def init_app(self, app: Flask) -> None:
-        """Initialize DoorBellManager"""
+        """Initialize CloudNotifier"""
         if app is not None:
-            logger.info("initializing the DoorBellManager")
+            logger.info("initializing the CloudNotifier")
 
             # retrieve RPI box ip
             self.rpi_cloud_ip = ip_discovery_service.get_ip_addr(mac=app.config["RPI_CLOUD_MAC"])
             self.rpi_cloud_port = app.config["RPI_CLOUD_PORT"]
-            self.rpi_cloud_video_stream_path = app.config["RPI_CLOUD_DOORBELL_PATH"]
+            self.rpi_cloud_video_stream_path = app.config["RPI_CLOUD_EVENT_PATH"]
 
-    def notify_video_stream_ready(self, stream_ready: bool):
+    def notify_video_stream_ready(self, stream_ready: bool, trigger: str = None):
         """Call HTTP post to notify video stream status to rpi cloud"""
 
         logger.info(f"Posting HTTP to notify video stream status {stream_ready} to RPI cloud")
@@ -40,7 +40,7 @@ class CloudNotifier:
         )
         try:
             headers = {"Content-Type": "application/x-www-form-urlencoded"}
-            data = {"status": stream_ready}
+            data = {"status": stream_ready, "trigger": trigger}
             rpi_cloud_response = requests.post(post_url, data=(data), headers=headers)
             logger.info(f"RPI cloud server response: {rpi_cloud_response.text}")
         except (ConnectionError, InvalidURL):

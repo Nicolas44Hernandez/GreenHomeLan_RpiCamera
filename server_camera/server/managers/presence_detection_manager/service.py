@@ -4,20 +4,20 @@ import time
 import yaml
 from datetime import datetime, timedelta
 from flask import Flask
-from server.interfaces.gpio_interface import GpioButtonInterface
 from server.managers.wifi_connection_manager import wifi_connection_manager_service
 from server.managers.thread_manager import thread_manager_service
 from server.notification.cloud_notifier import cloud_notifier_service
+from server.interfaces.gpio_interface.service import GpioMotionSensorInterface
 from server.common import ServerCameraException, ErrorCode
 
 
 logger = logging.getLogger(__name__)
 
 
-class DoorBellManager:
-    """Manager for Dorbell peripheral"""
+class PresenceDetectionManager:
+    """Manager for presence detection peripheral"""
 
-    gpio_interface: GpioButtonInterface
+    gpio_interface: GpioMotionSensorInterface
     wifi_thread_commands = {}
     wifi_on_time_in_secs: int
     max_wifi_on_waitting_time_in_secs: int
@@ -27,16 +27,16 @@ class DoorBellManager:
             self.init_app(app)
 
     def init_app(self, app: Flask) -> None:
-        """Initialize DoorBellManager"""
+        """Initialize PresenceDetectionManager"""
         if app is not None:
-            logger.info("initializing the DoorBellManager")
+            logger.info("initializing the PresenceDetectionManager")
 
             self.wifi_on_time_in_secs = app.config["WIFI_ON_TIME_IN_SECS"]
             self.max_wifi_on_waitting_time_in_secs = app.config["MAX_WIFI_ON_WAITTING_TIME_IN_SECS"]
             self.load_wifi_thread_commands(app.config["WIFI_THREAD_COMMANDS"])
-            self.gpio_interface = GpioButtonInterface(
-                button_pin=app.config["PERIPHERALS_DOORBELL_BUTTON"],
-                callback_function=self.doorbell_button_press_callback,
+            self.gpio_interface = GpioMotionSensorInterface(
+                sensor_pin=app.config["PERIPHERALS_PRESENCE_DETECTION_PIN"],
+                callback_function=self.presence_detection_callback,
             )
 
     def load_wifi_thread_commands(self, commands_yaml_file: str):
@@ -49,11 +49,12 @@ class DoorBellManager:
             except yaml.YAMLError as exc:
                 raise ServerCameraException(ErrorCode.WIFI_THREAD_COMMANDS_FILE_ERROR)
 
-    def doorbell_button_press_callback(self, channel):
-        """Callback function for doorbell button press"""
-        # Button debounce
-        time.sleep(0.2)
-        logger.info("Doorbell button pressed")
+    # TODO: mutualize wifi on / off commands
+    def presence_detection_callback(self, channel):
+        """Callback function for presence detection"""
+        # # Sensor debounce
+        # time.sleep(0.2)
+        logger.info("Presence detected")
 
         # If Wifi if not active, send thread command to activate it
         if not wifi_connection_manager_service.connected:
@@ -65,7 +66,9 @@ class DoorBellManager:
             logger.info("Already connected to Wifi")
 
         # Notify cloud server to video stream is ready
-        cloud_notifier_service.notify_video_stream_ready(stream_ready=True, trigger="doorbell")
+        cloud_notifier_service.notify_video_stream_ready(
+            stream_ready=True, trigger="presence_detection"
+        )
 
     def turn_off_wifi(self):
         """send thread command to turn off wifi"""
@@ -88,5 +91,5 @@ class DoorBellManager:
         wifi_off_timer.start()
 
 
-doorbell_manager_service: DoorBellManager = DoorBellManager()
-""" Doorbell manager service singleton"""
+presence_detection_manager_service: PresenceDetectionManager = PresenceDetectionManager()
+""" Presence detection manager service singleton"""

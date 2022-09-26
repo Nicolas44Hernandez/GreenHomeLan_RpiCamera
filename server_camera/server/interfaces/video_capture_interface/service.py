@@ -48,7 +48,7 @@ class VideoCaptureInterface(threading.Thread):
             now = datetime.now()
 
         # Notify cloud server to video stream is finished
-        cloud_notifier_service.notify_video_stream_ready(stream_ready=False)
+        cloud_notifier_service.notify_video_stream_ready(stream_ready=False, trigger="video_server")
         logger.info("Stream finished")
 
     def get_video_stream(self, duration_in_secs: int):

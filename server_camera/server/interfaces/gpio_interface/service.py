@@ -44,4 +44,5 @@ class GpioMotionSensorInterface:
 
         # setup
         self.motion_sensor = MotionSensor(self.sensor_pin)
-        self.motion_sensor.when_motion = callback_function
+        # sensor output  is inverted
+        self.motion_sensor.when_no_motion = callback_function
