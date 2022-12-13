@@ -1,0 +1,160 @@
+version: 1
+disable_existing_loggers: true
+
+formatters:
+  default:
+    format: "%(asctime)s [%(threadName)s] [%(levelname)s] %(name)s: %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: default
+
+  app:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/app.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  api_rest:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/api-rest.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  thread_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/thread.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  doorbell_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/doorbell.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  presence_detection_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/presence_detection.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  video_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/video.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  wifi_connection_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/wifi_connection.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  ip_discovery_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/ip_discovery.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  gpio_interface:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/interface/gpio.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  thread_interface:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/interface/thread.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  video_capture_interface:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/interface/video_capture.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  cloud_notifier:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/notification/cloud_notifier.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+root:
+  level: WARN
+  handlers: [console]
+
+loggers:
+  server.app:
+    level: INFO
+    handlers: [app]
+    propagate: no
+
+  server.rest_api:
+      level: INFO
+      handlers: [api_rest]
+      propagate: no
+
+  server.managers.thread_manager:
+    level: INFO
+    handlers: [thread_manager]
+    propagate: no
+
+  server.managers.doorbell_manager:
+    level: INFO
+    handlers: [doorbell_manager]
+    propagate: no
+
+  server.managers.presence_detection_manager:
+    level: INFO
+    handlers: [presence_detection_manager]
+    propagate: no
+
+  server.managers.wifi_connection_manager:
+    level: INFO
+    handlers: [wifi_connection_manager]
+    propagate: no
+
+  server.managers.video_manager:
+    level: INFO
+    handlers: [video_manager]
+    propagate: no
+
+  server.managers.ip_discovery:
+    level: INFO
+    handlers: [ip_discovery_manager]
+    propagate: no
+
+  server.interfaces.thread_interface:
+    level: INFO
+    handlers: [thread_interface]
+    propagate: no
+
+  server.interfaces.gpio_interface:
+    level: INFO
+    handlers: [gpio_interface]
+    propagate: no
+
+  server.interfaces.video_capture_interface:
+    level: INFO
+    handlers: [video_capture_interface]
+    propagate: no
+
+  server.notification.cloud_notifier:
+    level: INFO
+    handlers: [cloud_notifier]
+    propagate: no

@@ -1,0 +1,10 @@
+flask==2.0.1
+flask-smorest==0.34.1
+PyYAML==5.4.1
+pyserial==3.5
+RPi.GPIO==0.7.1
+timeloop==1.0.2
+opencv-python==4.6.0.66
+# Dev requirements
+black ==22.3.0
+pylint ==2.14.3
