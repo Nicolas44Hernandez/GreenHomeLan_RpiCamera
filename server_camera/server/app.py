@@ -7,11 +7,11 @@ import yaml
 from flask import Flask
 from .managers.thread_manager import thread_manager_service
 from .managers.mqtt_manager import mqtt_manager_service
-# from .managers.doorbell_manager import doorbell_manager_service
-# from .managers.presence_detection_manager import presence_detection_manager_service
-# from .managers.wifi_connection_manager import wifi_connection_manager_service
-# from .managers.video_manager import video_manager_service
-# from .notification.cloud_notifier import cloud_notifier_service
+from .managers.doorbell_manager import doorbell_manager_service
+from .managers.presence_detection_manager import presence_detection_manager_service
+from .managers.wifi_connection_manager import wifi_connection_manager_service
+from .managers.video_manager import video_manager_service
+from .notification.cloud_notifier import cloud_notifier_service
 from .rest_api.thread_setup import bp as thread_controler_bp
 from .rest_api.video_manager import bp as video_manager_controler_bp
 from .rest_api.wifi_connection import bp as wifi_connection_manager_controler_bp
@@ -81,15 +81,15 @@ def register_extensions(app: Flask):
     # Thread manager extension
     thread_manager_service.init_app(app=app)
     # Doorbell manager extension
-    #doorbell_manager_service.init_app(app=app)
+    doorbell_manager_service.init_app(app=app)
     # Presence detection manager extension
-    #presence_detection_manager_service.init_app(app=app)
+    presence_detection_manager_service.init_app(app=app)
     # Wifi connection manager extention
-    #wifi_connection_manager_service.init_app(app=app)
+    wifi_connection_manager_service.init_app(app=app)
     # Video manager extension
-    #video_manager_service.init_app(app=app)
+    video_manager_service.init_app(app=app)
     # Cloud notifier extension
-    #cloud_notifier_service.init_app(app=app)
+    cloud_notifier_service.init_app(app=app)
 
 
 def register_blueprints(app: Flask):
