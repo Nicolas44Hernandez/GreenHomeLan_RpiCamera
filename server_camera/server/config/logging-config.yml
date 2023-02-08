@@ -45,6 +45,13 @@ handlers:
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 1
 
+  mqtt_manager:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/manager/mqtt.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
   video_manager:
     class: logging.handlers.RotatingFileHandler
     formatter: default
@@ -63,6 +70,13 @@ handlers:
     class: logging.handlers.RotatingFileHandler
     formatter: default
     filename: logs/manager/ip_discovery.log
+    maxBytes: 52428800 # 50 Megabytes
+    backupCount: 1
+
+  mqtt_interface:
+    class: logging.handlers.RotatingFileHandler
+    formatter: default
+    filename: logs/interface/mqtt.log
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 1
 
@@ -109,9 +123,14 @@ loggers:
       handlers: [api_rest]
       propagate: no
 
+  server.managers.mqtt_manager:
+    level: INFO
+    handlers: [console]
+    propagate: no
+
   server.managers.thread_manager:
     level: INFO
-    handlers: [thread_manager]
+    handlers: [console]
     propagate: no
 
   server.managers.doorbell_manager:
@@ -139,9 +158,14 @@ loggers:
     handlers: [ip_discovery_manager]
     propagate: no
 
+  server.interfaces.mqtt_interface:
+    level: INFO
+    handlers: [console]
+    propagate: no
+
   server.interfaces.thread_interface:
     level: INFO
-    handlers: [thread_interface]
+    handlers: [console]
     propagate: no
 
   server.interfaces.gpio_interface:

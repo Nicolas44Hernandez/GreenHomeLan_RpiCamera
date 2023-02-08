@@ -5,6 +5,8 @@ pyserial==3.5
 RPi.GPIO==0.7.1
 timeloop==1.0.2
 opencv-python==4.6.0.66
+paho-mqtt ==1.6.1
+bson ==0.5.10
 # Dev requirements
 black ==22.3.0
 pylint ==2.14.3
