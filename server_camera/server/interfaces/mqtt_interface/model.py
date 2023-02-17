@@ -19,6 +19,4 @@ def serialize(msg: Msg) -> bytes:
 
 def deserialize(payload: bytes) -> Msg:
     """deserialize MQTT message"""
-    # TODO: review
     return bson.loads(payload)
-

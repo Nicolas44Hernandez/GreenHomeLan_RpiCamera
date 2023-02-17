@@ -7,7 +7,7 @@ from flask import Flask
 from server.interfaces.gpio_interface import GpioButtonInterface
 from server.managers.wifi_connection_manager import wifi_connection_manager_service
 from server.managers.thread_manager import thread_manager_service
-from server.notification.cloud_notifier import cloud_notifier_service
+from server.notification import notification_service
 from server.common import ServerCameraException, ErrorCode
 
 
@@ -52,20 +52,18 @@ class DoorBellManager:
     def doorbell_button_press_callback(self, channel):
         """Callback function for doorbell button press"""
         # Button debounce
-        time.sleep(0.2)
+        time.sleep(0.5)
         logger.info("Doorbell button pressed")
 
-        # If Wifi if not active, send thread command to activate it
+        # Notify the alarm to orchestrator
+        notification_service.notify_alarm(alarm_type="doorbell", msg="doorbell pressed")
+
+        # If Wifi if not active, wait for activation
         if not wifi_connection_manager_service.connected:
-            wifi_on_command = self.wifi_thread_commands["WIFI"]["BANDS"]["5GHz"][True]
-            logger.info(f"Not connected to Wifi, sending command: {wifi_on_command}")
-            thread_manager_service.send_thread_message_to_border_router(wifi_on_command)
+            logger.info(f"Not connected to WiFi, waiting for connection")
             self.set_wifi_off_timer()
         else:
             logger.info("Already connected to Wifi")
-
-        # Notify cloud server to video stream is ready
-        cloud_notifier_service.notify_video_stream_ready(stream_ready=True, trigger="doorbell")
 
     def turn_off_wifi(self):
         """send thread command to turn off wifi"""
@@ -79,11 +77,11 @@ class DoorBellManager:
         wait_max_until = now + timedelta(seconds=self.max_wifi_on_waitting_time_in_secs)
         while not wifi_connection_manager_service.connected:
             if now > wait_max_until:
-                logger.error("Wifi on watting timer")
+                logger.error("Wifi off watting timer expired, connection impossible")
                 return
             time.sleep(1)
             now = datetime.now()
-        logger.info(f"wifi off command will be sent in {self.wifi_on_time_in_secs} secs")
+        logger.info(f"WiFi off command will be sent in {self.wifi_on_time_in_secs} secs")
         wifi_off_timer = threading.Timer(self.wifi_on_time_in_secs, self.turn_off_wifi)
         wifi_off_timer.start()
 

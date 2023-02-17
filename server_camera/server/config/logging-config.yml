@@ -66,13 +66,6 @@ handlers:
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 1
 
-  ip_discovery_manager:
-    class: logging.handlers.RotatingFileHandler
-    formatter: default
-    filename: logs/manager/ip_discovery.log
-    maxBytes: 52428800 # 50 Megabytes
-    backupCount: 1
-
   mqtt_interface:
     class: logging.handlers.RotatingFileHandler
     formatter: default
@@ -101,10 +94,10 @@ handlers:
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 1
 
-  cloud_notifier:
+  notification:
     class: logging.handlers.RotatingFileHandler
     formatter: default
-    filename: logs/notification/cloud_notifier.log
+    filename: logs/notification/notification.log
     maxBytes: 52428800 # 50 Megabytes
     backupCount: 1
 
@@ -125,12 +118,12 @@ loggers:
 
   server.managers.mqtt_manager:
     level: INFO
-    handlers: [console]
+    handlers: [mqtt_manager]
     propagate: no
 
   server.managers.thread_manager:
     level: INFO
-    handlers: [console]
+    handlers: [thread_manager]
     propagate: no
 
   server.managers.doorbell_manager:
@@ -153,19 +146,14 @@ loggers:
     handlers: [video_manager]
     propagate: no
 
-  server.managers.ip_discovery:
-    level: INFO
-    handlers: [ip_discovery_manager]
-    propagate: no
-
   server.interfaces.mqtt_interface:
     level: INFO
-    handlers: [console]
+    handlers: [mqtt_interface]
     propagate: no
 
   server.interfaces.thread_interface:
     level: INFO
-    handlers: [console]
+    handlers: [thread_interface]
     propagate: no
 
   server.interfaces.gpio_interface:
@@ -178,7 +166,7 @@ loggers:
     handlers: [video_capture_interface]
     propagate: no
 
-  server.notification.cloud_notifier:
+  server.notification:
     level: INFO
-    handlers: [cloud_notifier]
+    handlers: [notification]
     propagate: no

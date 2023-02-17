@@ -17,6 +17,7 @@ class WifiConnectionManager:
 
     connected: bool
     polling_period_in_secs: int
+    test_connection_address: str
 
     def __init__(self, app: Flask = None) -> None:
         if app is not None:
@@ -28,6 +29,7 @@ class WifiConnectionManager:
             logger.info("initializing the WifiConnectionManager")
 
             self.polling_period_in_secs = app.config["WIFI_CONNECTION_STATUS_POLL_PERIOD_IN_SECS"]
+            self.test_connection_address = app.config["TEST_CONNETION_IP"]
 
             # Schedule wifi connection status polling
             self.schedule_wifi_connection_status_polling()
@@ -43,7 +45,7 @@ class WifiConnectionManager:
             # retrieve wifi connection status
             try:
                 _socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                _socket.connect(("192.168.1.45", 80))
+                _socket.connect((self.test_connection_address, 80))
                 self.connected = True
             except OSError:
                 self.connected = False

@@ -14,8 +14,6 @@ class ErrorCode(Enum):
         500,
         "Error in wifi thread commands load, check commands file",
     )
-    IP_DISCOVERY_BRODCAST_PING_ERROR = (3, 500, "Error in brodcast ping for ip discovery")
-    IP_DISCOVERY_UNKNOWN_STATION = (4, 500, "Error in ip discovery statiopn unknown")
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):

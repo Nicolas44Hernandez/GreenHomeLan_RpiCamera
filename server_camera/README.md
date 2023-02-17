@@ -90,36 +90,14 @@ mkdir logs/manager
 mkdir logs/interface
 mkdir logs/notification
 touch logs/app.log logs/api-rest.log
-touch logs/manager/mqtt.log logs/manager/thread.log logs/manager/doorbell.log logs/manager/presence_detection.log logs/manager/video.log logs/manager/wifi_connection.log logs/manager/ip_discovery.log
+touch logs/manager/mqtt.log logs/manager/thread.log logs/manager/doorbell.log logs/manager/presence_detection.log logs/manager/video.log logs/manager/wifi_connection.log
 touch logs/interface/mqtt.log logs/interface/gpio.log logs/interface/thread.log logs/interface/video_capture.log
-touch logs/notification/cloud_notifier.log
+touch logs/notification/notification.log
 ```
 
 # Hardware connection
 Connect the camera, doorbell button and presence sensor to the RPI
 ![RPI camera connection](../images/rpi-camera.png)
-
-# Set rpi-camera as a service
-
-## Clean IP tables
-
-Install nmap
-```bash
-sudo apt install -y nmap
-```
-Clean the tables
-bash```
-sudo ip neigh flush dev eth0
-nmap -sn 192.168.1.0/24
-```
-
-## Configuration
-In the file `server_camera/server/config/server-camera-config.yml` set the rpi_box and rpi_cloud ip addresses
-
-```
-RPI_BOX_MAC: XX:XX:XX:XX:XX
-RPI_CLOUD_MAC: XX:XX:XX:XX:XX
-```
 
 ## Set the app as a service
 

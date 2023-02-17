@@ -6,8 +6,6 @@ import threading
 import cv2
 from datetime import datetime, timedelta
 from flask import Response
-from server.notification.cloud_notifier import cloud_notifier_service
-
 
 PICTURE_RATIO = 0.8
 
@@ -46,9 +44,6 @@ class VideoCaptureInterface(threading.Thread):
                     b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
                 )  # concat frame one by one and show result
             now = datetime.now()
-
-        # Notify cloud server to video stream is finished
-        cloud_notifier_service.notify_video_stream_ready(stream_ready=False, trigger="video_server")
         logger.info("Stream finished")
 
     def get_video_stream(self, duration_in_secs: int):
