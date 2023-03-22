@@ -113,22 +113,22 @@ loggers:
 
   server.rest_api:
       level: INFO
-      handlers: [api_rest]
+      handlers: [console]
       propagate: no
 
   server.managers.mqtt_manager:
     level: INFO
-    handlers: [mqtt_manager]
+    handlers: [console]
     propagate: no
 
   server.managers.thread_manager:
     level: INFO
-    handlers: [thread_manager]
+    handlers: [console]
     propagate: no
 
   server.managers.doorbell_manager:
     level: INFO
-    handlers: [doorbell_manager]
+    handlers: [console]
     propagate: no
 
   server.managers.presence_detection_manager:
@@ -138,22 +138,22 @@ loggers:
 
   server.managers.wifi_connection_manager:
     level: INFO
-    handlers: [wifi_connection_manager]
+    handlers: [console]
     propagate: no
 
   server.managers.video_manager:
     level: INFO
-    handlers: [video_manager]
+    handlers: [console]
     propagate: no
 
   server.interfaces.mqtt_interface:
     level: INFO
-    handlers: [mqtt_interface]
+    handlers: [console]
     propagate: no
 
   server.interfaces.thread_interface:
     level: INFO
-    handlers: [thread_interface]
+    handlers: [console]
     propagate: no
 
   server.interfaces.gpio_interface:
@@ -163,7 +163,7 @@ loggers:
 
   server.interfaces.video_capture_interface:
     level: INFO
-    handlers: [video_capture_interface]
+    handlers: [console]
     propagate: no
 
   server.notification:

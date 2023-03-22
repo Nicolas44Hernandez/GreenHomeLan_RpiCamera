@@ -102,7 +102,7 @@ class ThreadNode:
             logger.info(f"Command: {command.strip()}")
             logger.info(f"Response: {response}")
             return True, response
-        except:
+        except Exception as e:
             logger.info(f"Error sending command")
             return False, None
 

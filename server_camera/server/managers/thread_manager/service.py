@@ -1,9 +1,13 @@
 import logging
+from datetime import timedelta
+from timeloop import Timeloop
 from flask import Flask
 from server.managers.mqtt_manager import mqtt_manager_service
 from server.interfaces.thread_interface import ThreadInterface
 
 logger = logging.getLogger(__name__)
+
+thread_keep_alive_timeloop = Timeloop()
 
 
 class ThreadManager:
@@ -49,6 +53,8 @@ class ThreadManager:
         if (
             not self.thread_interface.running
             or thread_network_config["dataset_key"] != self.thread_interface.dataset_key
+            or thread_network_config["ipv6_mesh"] != self.thread_interface.ipv6_mesh
+            or thread_network_config["ipv6_otbr"] != self.thread_interface.ipv6_otbr
         ):
             logger.info(f"Join Thread network, interface setup")
             logger.info(f"Thread network params received: {thread_network_config}")
@@ -63,8 +69,20 @@ class ThreadManager:
                 self.thread_network_config = None
                 logger.error(f"Error in thread node setup")
 
-        # TODO: send thread message to notify conncetion and add periodic keep alive
-        # self.send_thread_message_to_border_router("cam")
+            # send thread message to notify conncetion
+            self.send_thread_message_to_border_router("ka_cam")
+            # Schedule periodic keep alive
+            # self.schedule_thread_keep_alive_message_send()
+
+    # def schedule_thread_keep_alive_message_send(self):
+    #     """Schedule KA thread message"""
+
+    #     @thread_keep_alive_timeloop.job(interval=timedelta(seconds=20))
+    #     def send_keep_alive():
+    #         logger.info("sending Thread keep alive msg")
+    #         self.send_thread_message_to_border_router("ka_cam")
+
+    #     thread_keep_alive_timeloop.start(block=False)
 
     def send_thread_message_to_border_router(self, message: str):
         """Send message to border router"""

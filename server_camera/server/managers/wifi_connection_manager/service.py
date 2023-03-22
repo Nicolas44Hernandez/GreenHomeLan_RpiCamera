@@ -77,8 +77,7 @@ class WifiConnectionManager:
         """Wait for WiFi temporary activation"""
 
         # If Wifi if not active, wait for activation
-        # if self.connected:
-        if False:
+        if self.connected:
             logger.info("Already connected to Wifi")
         else:
             logger.info(f"Not connected to WiFi, waiting for connection")
