@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 bp = Blueprint("thread", __name__, url_prefix="/thread")
 """ The api blueprint. Should be registered in app main api object """
 
-
-@bp.route("/")
+#TODO: review APIS (get_thread_network_setup)
+@bp.route("/setup")
 class ThreadNodesApi(MethodView):
     """API to retrieve node current thread configuration"""
 
@@ -25,26 +25,6 @@ class ThreadNodesApi(MethodView):
         logger.info(f"GET thread/setup")
 
         return thread_manager_service.get_thread_network_setup()
-
-
-@bp.route("/setup")
-class SetupThreadNetworkNode(MethodView):
-    """API to receive the Thread network configuration"""
-
-    @bp.doc(responses={400: "BAD_REQUEST"})
-    @bp.arguments(ThreadNetworkSetupSchema, location="json")
-    def post(self, args: ThreadNetworkSetupSchema):
-        """
-        Set Thread network configuration in the node
-        """
-        logger.info(f"POST thread/setup")
-
-        thread_manager_service.join_thread_network(
-            ipv6_otbr=args["ipv6_otbr"],
-            ipv6_mesh=args["ipv6_mesh"],
-            dataset_key=args["dataset_key"],
-        )
-        return "Thread setup OK"
 
 
 @bp.route("/message")
