@@ -54,7 +54,7 @@ class ThreadClientDongle(threading.Thread):
                 received_data = self.serial_interface.read(
                     self.serial_interface.inWaiting()
                 )
-                print("Received data: ", received_data.decode("utf-8"))
+                logger.info("Received data: ", received_data.decode("utf-8"))
             time.sleep(0.1)
 
     def set_msg_reception_callback(self, callback: callable):
