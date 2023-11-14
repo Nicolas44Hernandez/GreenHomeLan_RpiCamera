@@ -158,7 +158,7 @@ loggers:
 
   server.interfaces.gpio_interface:
     level: INFO
-    handlers: [gpio_interface]
+    handlers: [console]
     propagate: no
 
   server.interfaces.video_capture_interface:

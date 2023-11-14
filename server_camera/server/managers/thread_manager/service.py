@@ -37,15 +37,14 @@ class ThreadManager:
 
     def send_thread_message_to_border_router(self, message: str):
         """Send message to border router"""
-        pass
 
-        # if self.thread_interface.running:
-        #     self.thread_interface.send_message_to_border_router(message)
-        # else:
-        #     logger.error(
-        #         "Thread network not configured or not running, wating for network setup message"
-        #     )
-        #     logger.error("Message not published")
+        if not self.thread_dongle_interface.send_message_to_border_router(
+            message=message
+        ):
+            logger.error(
+                "Thread network not configured or not running, wating for network setup message"
+            )
+            logger.error("Message not published")
 
 
 thread_manager_service: ThreadManager = ThreadManager()
