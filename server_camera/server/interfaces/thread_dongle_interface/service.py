@@ -50,12 +50,11 @@ class ThreadClientDongle(threading.Thread):
         """Run thread"""
 
         while True:
-            logger.info("loop....")
             if self.serial_interface.inWaiting() > 0:
                 received_data = self.serial_interface.read(
                     self.serial_interface.inWaiting()
                 )
-                logger.info("Received data: ", received_data.decode("utf-8"))
+                logger.info(f"Received data:%s ", received_data.decode("utf-8"))
             time.sleep(0.1)
 
     def set_msg_reception_callback(self, callback: callable):
