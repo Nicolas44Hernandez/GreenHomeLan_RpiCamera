@@ -51,7 +51,6 @@ class ThreadClientDongle(threading.Thread):
                     self.serial_interface.inWaiting()
                 )
                 logger.info(f"Received data:%s ", received_data.decode("utf-8"))
-                self.send_message_to_border_router("MSG")
                 # TODO: Specify received messages and what to do (callbacks)
             time.sleep(0.1)
 

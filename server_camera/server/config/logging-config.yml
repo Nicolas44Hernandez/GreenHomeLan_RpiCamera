@@ -123,12 +123,12 @@ loggers:
 
   server.managers.thread_manager:
     level: INFO
-    handlers: [console]
+    handlers: [thread_manager]
     propagate: no
 
   server.managers.doorbell_manager:
     level: INFO
-    handlers: [console]
+    handlers: [doorbell_manager]
     propagate: no
 
   server.managers.presence_detection_manager:
@@ -153,12 +153,12 @@ loggers:
 
   server.interfaces.thread_dongle_interface:
     level: INFO
-    handlers: [console]
+    handlers: [thread_dongle_interface]
     propagate: no
 
   server.interfaces.gpio_interface:
     level: INFO
-    handlers: [console]
+    handlers: [gpio_interface]
     propagate: no
 
   server.interfaces.video_capture_interface:
@@ -168,5 +168,5 @@ loggers:
 
   server.notification:
     level: INFO
-    handlers: [console]
+    handlers: [notification]
     propagate: no

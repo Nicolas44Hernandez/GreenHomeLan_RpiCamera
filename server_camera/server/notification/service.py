@@ -25,6 +25,7 @@ class AlarmNotifier:
     def notify_alarm(self, alarm_type: str, msg: str):
         logger.info(f"Sending alarm notification alarm:{alarm_type} msg:{msg}")
         """Notify alarm to orchestrator"""
+        # TODO: uncomment for working via wifi MQTT
         # if wifi_connection_manager_service.connected:
         #     return self.notify_mqtt_alarm(alarm_type=alarm_type, msg=msg)
         # else:
