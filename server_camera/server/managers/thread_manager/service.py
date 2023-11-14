@@ -32,6 +32,9 @@ class ThreadManager:
                 thread_serial_port=self.serial_interface
             )
 
+            # Run thread donfgle interface in dedicated thread
+            self.thread_interface.run_dedicated_thread()
+
     def send_thread_message_to_border_router(self, message: str):
         """Send message to border router"""
         pass
