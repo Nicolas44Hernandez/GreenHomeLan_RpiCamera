@@ -11,6 +11,7 @@ from queue import Queue, Empty
 
 logger = logging.getLogger(__name__)
 
+
 class ThreadClientDongle(threading.Thread):
     """Service class for thread client management"""
 
@@ -29,9 +30,14 @@ class ThreadClientDongle(threading.Thread):
         # Run Thread interface dedicated thread
         # self.running = True
         # Call Super constructor
+        logger.info(f"Creatting serial interface object")
         self.serial_interface = serial.Serial(
-            self.thread_serial_port, 115200, stopbits=serial.STOPBITS_ONE
+            "/dev/ttyAMA0", 115200, stopbits=serial.STOPBITS_ONE
         )
+
+        # self.serial_interface = serial.Serial(
+        #     self.thread_serial_port, 115200, stopbits=serial.STOPBITS_ONE
+        # )
         super(ThreadClientDongle, self).__init__(name="ThreadClientDongleThread")
         self.setDaemon(True)
 
