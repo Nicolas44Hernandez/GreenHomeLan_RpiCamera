@@ -16,7 +16,6 @@ class ThreadClientDongle(threading.Thread):
     """Service class for thread client management"""
 
     thread_serial_port: str
-    running: bool
     msg_callback: callable
     keep_alive_callback: callable
     serial_interface: serial.Serial
@@ -25,19 +24,12 @@ class ThreadClientDongle(threading.Thread):
         self.thread_serial_port = thread_serial_port
         self.msg_callback = None
         self.keep_alive_callback = None
-        # self.running = False
 
         # Run Thread interface dedicated thread
-        # self.running = True
-        # Call Super constructor
         logger.info(f"Creatting serial interface object")
         self.serial_interface = serial.Serial(
-            "/dev/ttyAMA0", 115200, stopbits=serial.STOPBITS_ONE
+            self.thread_serial_port, 115200, stopbits=serial.STOPBITS_ONE
         )
-
-        # self.serial_interface = serial.Serial(
-        #     self.thread_serial_port, 115200, stopbits=serial.STOPBITS_ONE
-        # )
         super(ThreadClientDongle, self).__init__(name="ThreadClientDongleThread")
         self.setDaemon(True)
 
