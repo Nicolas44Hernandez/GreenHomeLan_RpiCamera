@@ -23,17 +23,17 @@ class ThreadManager:
         """Initialize ThreadManager"""
         if app is not None:
             logger.info("initializing the ThreadManager")
-            self.thread_interface = None
+            self.thread_dongle_interface = None
             self.serial_interface = app.config["THREAD_SERIAL_INTERFACE"]
             self.serial_speed = app.config["THREAD_SERIAL_SPEED"]
 
             # Create Thread interface
-            self.thread_interface = ThreadDongleInterface(
+            self.thread_dongle_interface = ThreadDongleInterface(
                 thread_serial_port=self.serial_interface
             )
 
             # Run thread donfgle interface in dedicated thread
-            self.thread_interface.run_dedicated_thread()
+            self.thread_dongle_interface.run_dedicated_thread()
 
     def send_thread_message_to_border_router(self, message: str):
         """Send message to border router"""
