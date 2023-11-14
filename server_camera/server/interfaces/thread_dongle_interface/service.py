@@ -16,14 +16,10 @@ class ThreadClientDongle(threading.Thread):
     """Service class for thread client management"""
 
     thread_serial_port: str
-    msg_callback: callable
-    keep_alive_callback: callable
     serial_interface: serial.Serial
 
     def __init__(self, thread_serial_port: str):
         self.thread_serial_port = thread_serial_port
-        self.msg_callback = None
-        self.keep_alive_callback = None
 
         # Run Thread interface dedicated thread
         logger.info(f"Creatting serial interface object...")
@@ -55,12 +51,18 @@ class ThreadClientDongle(threading.Thread):
                     self.serial_interface.inWaiting()
                 )
                 logger.info(f"Received data:%s ", received_data.decode("utf-8"))
+                self.send_message_to_border_router("MSG")
+                # TODO: Specify received messages and what to do (callbacks)
             time.sleep(0.1)
 
-    def set_msg_reception_callback(self, callback: callable):
-        """Set Thread message reception callback"""
-        self.msg_callback = callback
+    def send_message_to_border_router(self, message: str):
+        """Send thread message to Border router"""
 
-    def set_keep_alive_reception_callback(self, callback: callable):
-        """Set Thread keep_alive reception callback"""
-        self.keep_alive_callback = callback
+        message = "~" + message + "#"
+        logger.info("Sending msg: ", message)
+        ret = self.serial_interface.write(message.encode("utf-8"))
+        # TODO: manage return values and exceptions
+
+        if ret != 0:
+            return True
+        return False
