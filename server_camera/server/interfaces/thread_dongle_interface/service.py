@@ -59,7 +59,7 @@ class ThreadClientDongle(threading.Thread):
         """Send thread message to Border router"""
 
         message = "~" + message + "#"
-        logger.info("Sending msg: ", message)
+        logger.info(f"Sending msg: %s", message)
         ret = self.serial_interface.write(message.encode("utf-8"))
         # TODO: manage return values and exceptions
 
