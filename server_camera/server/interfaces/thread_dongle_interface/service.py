@@ -26,7 +26,7 @@ class ThreadClientDongle(threading.Thread):
         self.keep_alive_callback = None
 
         # Run Thread interface dedicated thread
-        logger.info(f"Creatting serial interface object")
+        logger.info(f"Creatting serial interface object...")
         self.serial_interface = serial.Serial(
             self.thread_serial_port, 115200, stopbits=serial.STOPBITS_ONE
         )
@@ -50,6 +50,7 @@ class ThreadClientDongle(threading.Thread):
         """Run thread"""
 
         while True:
+            logger.info("loop....")
             if self.serial_interface.inWaiting() > 0:
                 received_data = self.serial_interface.read(
                     self.serial_interface.inWaiting()
