@@ -25,10 +25,10 @@ class AlarmNotifier:
     def notify_alarm(self, alarm_type: str, msg: str):
         logger.info(f"Sending alarm notification alarm:{alarm_type} msg:{msg}")
         """Notify alarm to orchestrator"""
-        if wifi_connection_manager_service.connected:
-            return self.notify_mqtt_alarm(alarm_type=alarm_type, msg=msg)
-        else:
-            return self.notify_thread_alarm(alarm_type=alarm_type)
+        # if wifi_connection_manager_service.connected:
+        #     return self.notify_mqtt_alarm(alarm_type=alarm_type, msg=msg)
+        # else:
+        return self.notify_thread_alarm(alarm_type=alarm_type)
 
     def notify_mqtt_alarm(self, alarm_type: str, msg: str) -> bool:
         """Send MQTT message to notify alarm"""
@@ -43,7 +43,9 @@ class AlarmNotifier:
             logger.info(f"Network info: {alarm_data}")
             return True
         else:
-            logger.error("Impossible to publish alarm to MQTT topic {self.mqtt_alarm_notif_topic}")
+            logger.error(
+                "Impossible to publish alarm to MQTT topic {self.mqtt_alarm_notif_topic}"
+            )
             return False
 
     def notify_thread_alarm(self, alarm_type: str) -> bool:

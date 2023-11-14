@@ -168,5 +168,5 @@ loggers:
 
   server.notification:
     level: INFO
-    handlers: [notification]
+    handlers: [console]
     propagate: no
