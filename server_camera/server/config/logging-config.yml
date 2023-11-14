@@ -128,7 +128,7 @@ loggers:
 
   server.managers.doorbell_manager:
     level: INFO
-    handlers: [doorbell_manager]
+    handlers: [console]
     propagate: no
 
   server.managers.presence_detection_manager:
