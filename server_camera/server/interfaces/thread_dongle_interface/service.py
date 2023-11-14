@@ -18,13 +18,13 @@ class ThreadClientDongle(threading.Thread):
     thread_serial_port: str
     serial_interface: serial.Serial
 
-    def __init__(self, thread_serial_port: str):
+    def __init__(self, thread_serial_port: str, serial_speed: int = 115200):
         self.thread_serial_port = thread_serial_port
 
         # Run Thread interface dedicated thread
         logger.info(f"Creatting serial interface object...")
         self.serial_interface = serial.Serial(
-            self.thread_serial_port, 115200, stopbits=serial.STOPBITS_ONE
+            self.thread_serial_port, serial_speed, stopbits=serial.STOPBITS_ONE
         )
         super(ThreadClientDongle, self).__init__(name="ThreadClientDongleThread")
         self.setDaemon(True)

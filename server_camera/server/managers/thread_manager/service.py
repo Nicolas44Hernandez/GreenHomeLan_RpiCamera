@@ -29,7 +29,8 @@ class ThreadManager:
 
             # Create Thread interface
             self.thread_dongle_interface = ThreadDongleInterface(
-                thread_serial_port=self.serial_interface
+                thread_serial_port=self.serial_interface,
+                serial_speed=self.serial_speed,
             )
 
             # Run thread donfgle interface in dedicated thread
