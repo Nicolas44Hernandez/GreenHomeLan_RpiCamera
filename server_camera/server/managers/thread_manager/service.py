@@ -56,7 +56,7 @@ class ThreadManager:
         def send_ka_message():
             # Send keep alive message via thread
             logger.info(f"Sending thread keep alive message")
-            ka_msg = f"ka_{self.device_id} "
+            ka_msg = f"ka_{self.device_id}"
             self.send_thread_message_to_border_router(ka_msg)
 
         thread_keep_alive_timeloop.start(block=False)
@@ -64,9 +64,8 @@ class ThreadManager:
     def send_thread_message_to_border_router(self, message: str):
         """Send message to border router"""
 
-        if not self.thread_dongle_interface.send_message_to_border_router(
-            message=message
-        ):
+        msg = f"{message} "
+        if not self.thread_dongle_interface.send_message_to_border_router(message=msg):
             logger.error(
                 "Thread network not configured or not running, wating for network setup message"
             )
