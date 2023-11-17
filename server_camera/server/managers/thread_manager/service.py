@@ -56,7 +56,7 @@ class ThreadManager:
         def send_ka_message():
             # Send keep alive message via thread
             logger.info(f"Sending thread keep alive message")
-            ka_msg = f"ka_{self.device_id}"
+            ka_msg = f"ka_{self.device_id} "
             self.send_thread_message_to_border_router(ka_msg)
 
         thread_keep_alive_timeloop.start(block=False)
