@@ -12,7 +12,7 @@ from .managers.doorbell_manager import doorbell_manager_service
 from .managers.presence_detection_manager import presence_detection_manager_service
 from .managers.wifi_connection_manager import wifi_connection_manager_service
 
-# from .managers.video_manager import video_manager_service
+from .managers.video_manager import video_manager_service
 from .notification import notification_service
 from .rest_api.thread_setup import bp as thread_controler_bp
 from .rest_api.video_manager import bp as video_manager_controler_bp
@@ -89,7 +89,7 @@ def register_extensions(app: Flask):
     # Wifi connection manager extention
     wifi_connection_manager_service.init_app(app=app)
     # Video manager extension
-    # video_manager_service.init_app(app=app)
+    video_manager_service.init_app(app=app)
     # Notification extension
     notification_service.init_app(app=app)
 
