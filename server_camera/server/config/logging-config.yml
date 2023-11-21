@@ -143,7 +143,7 @@ loggers:
 
   server.managers.video_manager:
     level: INFO
-    handlers: [video_manager]
+    handlers: [console]
     propagate: no
 
   server.interfaces.mqtt_interface:
@@ -163,7 +163,7 @@ loggers:
 
   server.interfaces.video_capture_interface:
     level: INFO
-    handlers: [video_manager]
+    handlers: [console]
     propagate: no
 
   server.notification:
