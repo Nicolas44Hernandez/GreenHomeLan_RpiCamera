@@ -35,7 +35,9 @@ class WifiConnectionManager:
         if app is not None:
             logger.info("initializing the WifiConnectionManager")
 
-            self.polling_period_in_secs = app.config["WIFI_CONNECTION_STATUS_POLL_PERIOD_IN_SECS"]
+            self.polling_period_in_secs = app.config[
+                "WIFI_CONNECTION_STATUS_POLL_PERIOD_IN_SECS"
+            ]
             self.test_connection_address = app.config["TEST_CONNETION_IP"]
             self.load_wifi_thread_commands(app.config["WIFI_THREAD_COMMANDS"])
 
@@ -89,7 +91,7 @@ class WifiConnectionManager:
     def turn_off_wifi(self):
         """send thread command to turn off wifi"""
         logger.info("Sendin WiFi OFF message via Thread")
-        command = self.wifi_thread_commands["WIFI"]["BANDS"]["5GHz"][False]
+        command = self.wifi_thread_commands["WIFI"]["BANDS"]["2.4GHz"][False]
         thread_manager_service.send_thread_message_to_border_router(command)
 
     def wait_for_connection_and_set_wifi_off_timer(
