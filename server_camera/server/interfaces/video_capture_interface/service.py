@@ -8,6 +8,7 @@ import io
 import time
 from datetime import datetime, timedelta
 from flask import Response
+from server.common import ServerCameraException, ErrorCode
 
 PICTURE_RATIO = 0.8
 
@@ -33,30 +34,18 @@ class VideoCaptureInterface(threading.Thread):
         estimated_end = datetime.now() + timedelta(seconds=duration_in_secs)
         now = datetime.now()
         while now < estimated_end:
-            # TODO:  Try exception
-            # frame = self.picam.capture_array() # read the camera frame
-            stream = io.BytesIO()
-            self.picam.capture_file(stream, format="jpeg")  # this is the laggy bit
-            stream.seek(0)  # goes to start of buffer
-            frame = stream.read()
-            stream.truncate()  # cleans up buffer memory
-
-            # frame = cv2.resize(
-            #     frame,
-            #     None,
-            #     fx=PICTURE_RATIO,
-            #     fy=PICTURE_RATIO,
-            #     interpolation=cv2.INTER_AREA,
-            # )
-            # ret, buffer = cv2.imencode(".jpg", frame)
-            # if not ret:
-            #     logger.error("Error in image encode")
-            #     continue
-            # frame = buffer.tobytes()
-            yield (
-                b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
-            )  # concat frame one by one and show result
-            now = datetime.now()
+            try:
+                stream = io.BytesIO()
+                self.picam.capture_file(stream, format="jpeg")  # this is the laggy bit
+                stream.seek(0)  # goes to start of buffer
+                frame = stream.read()
+                stream.truncate()  # cleans up buffer memory
+                yield (
+                    b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
+                )  # concat frame one by one and show result
+                now = datetime.now()
+            except:
+                raise ServerCameraException(ErrorCode.CAMERA_ERROR)
         logger.info("Stream finished")
 
     def get_video_stream(self, duration_in_secs: int):

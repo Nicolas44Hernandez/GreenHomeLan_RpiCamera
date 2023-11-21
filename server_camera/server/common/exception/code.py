@@ -14,6 +14,11 @@ class ErrorCode(Enum):
         500,
         "Error in wifi thread commands load, check commands file",
     )
+    CAMERA_ERROR = (
+        3,
+        500,
+        "Error in rpi camera capture",
+    )
 
     # pylint: disable=unused-argument
     def __new__(cls, *args, **kwds):
