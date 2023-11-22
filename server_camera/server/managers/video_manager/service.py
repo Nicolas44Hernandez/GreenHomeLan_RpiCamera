@@ -5,6 +5,7 @@ import logging
 from flask import Flask
 from timeloop import Timeloop
 from server.interfaces.video_capture_interface import VideoCaptureInterface
+from server.common import ServerCameraException, ErrorCode
 
 last_frame_test_timeloop = Timeloop()
 
@@ -29,6 +30,10 @@ class VideoManager:
 
     def get_video_stream(self):
         """Get camera video stream"""
+
+        if self.video_capture_interface is None:
+            logger.error("Error in camera, check connection and restart service")
+            raise ServerCameraException(ErrorCode.CAMERA_ERROR)
 
         return self.video_capture_interface.get_video_stream(
             duration_in_secs=self.stream_duration_in_secs

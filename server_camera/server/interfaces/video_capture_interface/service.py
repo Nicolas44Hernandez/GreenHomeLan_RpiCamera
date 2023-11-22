@@ -22,12 +22,16 @@ class VideoCaptureInterface(threading.Thread):
     picam: Picamera2
 
     def __init__(self):
-        self.picam = Picamera2()
-        camera_config = self.picam.create_preview_configuration()
-        self.picam.configure(camera_config)
-        self.picam.start()
-        time.sleep(2)
-        logger.info("Video manager interface started")
+        try:
+            self.picam = Picamera2()
+            camera_config = self.picam.create_preview_configuration()
+            self.picam.configure(camera_config)
+            self.picam.start()
+            time.sleep(2)
+            logger.info("Video manager interface started")
+        except:
+            logger.error("Error in camera configuration, check connection")
+            return None
 
     def gen_frames(self, duration_in_secs: int):
         logger.info("Streaming...")
