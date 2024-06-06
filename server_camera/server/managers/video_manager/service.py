@@ -51,7 +51,7 @@ class VideoManager:
         )
         def post_service_to_orchestrator():
             # Register service to orchestrator
-            logger.info(f"Posting service to orchestrator")
+            logger.info(f"Posting service to orchestrator in: {self.orchestrator_register_service_url}")
 
             data = {
                 "_id": 2,
@@ -82,13 +82,13 @@ class VideoManager:
         try:
             server_response = requests.post(
                 url,
-                data=(data),
-                headers={"Content-Type": "application/json"},
+                json=data,
                 timeout=timeout,
             )
             logger.info(f"Server response: {server_response.text}")
-        except Exception:
-            logger.error(f"Error when posting to rpi cloud")
+            #TODO: what to do with the key
+        except Exception as e:
+            logger.error(f"Error when posting to orchestrator")
 
 
     def post_to_orchestrator_in_dedicated_thread(
