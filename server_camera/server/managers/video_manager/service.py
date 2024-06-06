@@ -40,6 +40,8 @@ class VideoManager:
     def schedule_tasks(self):
         """Schedule the video manager tasks"""
 
+        logger.info(f"Schedule tasks")
+
         # Start wifi status polling service
         @video_manager_timeloop.job(
             interval=timedelta(seconds=self.post_period_in_secs)
