@@ -34,6 +34,9 @@ class VideoManager:
             self.video_capture_interface = VideoCaptureInterface()
             self.post_period_in_secs = app.config["POST_SERVICE_TO_ORCHESTRATOR_PERIOD_IN_SECS"]
 
+            # Schedule video manager tasks
+            self.schedule_tasks()
+
     def schedule_tasks(self):
         """Schedule the video manager tasks"""
 
