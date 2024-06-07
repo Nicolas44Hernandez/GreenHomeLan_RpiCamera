@@ -4,6 +4,7 @@ Video manager service
 import logging
 import threading
 import requests
+import socket
 from flask import Flask
 from timeloop import Timeloop
 from datetime import timedelta
@@ -23,6 +24,9 @@ class VideoManager:
     stream_duration_in_secs: int
     orchestrator_register_service: str
     post_period_in_secs: int
+    cam_id: int
+    url_path: str
+    video_server_url: str
 
     def __init__(self, app: Flask = None) -> None:
         if app is not None:
@@ -36,9 +40,28 @@ class VideoManager:
             self.orchestrator_register_service_url = app.config["ORCHESTRATOR_REGISTER_SERVICE_URL"]
             self.video_capture_interface = VideoCaptureInterface()
             self.post_period_in_secs = app.config["POST_SERVICE_TO_ORCHESTRATOR_PERIOD_IN_SECS"]
+            self.cam_id = app.config["CAM_ID"]
+            self.url_path = ":5000/video_stream"
+            self.video_server_url = self.get_video_server_address()
 
             # Schedule video manager tasks
             self.schedule_tasks()
+
+
+    def get_video_server_address(self):
+        """ Return video server address"""
+        # Get Orchestrator ip address
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("192.168.1.122", 80))
+            ip_addr = s.getsockname()[0]
+            base_url = f"http://{ip_addr}{self.url_path}"
+            s.close()
+            return base_url
+        except:
+            logger.error("Error retreiving IP")
+            return None
+
 
     def schedule_tasks(self):
         """Schedule the video manager tasks"""
@@ -54,8 +77,8 @@ class VideoManager:
             logger.info(f"Posting service to orchestrator in: {self.orchestrator_register_service_url}")
 
             data = {
-                "_id": 2,
-                "url": "TEST_URL"
+                "_id": self.cam_id,
+                "url": self.video_server_url,
             }
             self.post_to_orchestrator_in_dedicated_thread(
                 url=self.orchestrator_register_service_url,
