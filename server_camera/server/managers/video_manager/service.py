@@ -91,6 +91,8 @@ class VideoManager:
     def get_video_stream(self):
         """Get camera video stream"""
 
+        logger.info("Getting video stream...")
+
         if self.video_capture_interface is None:
             logger.error("Error in camera, check connection and restart service")
             raise ServerCameraException(ErrorCode.CAMERA_ERROR)
